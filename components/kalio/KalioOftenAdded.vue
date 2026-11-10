@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { currentCurrency } from "../region-switcher/region";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import { addVariant, hasSizes, quickAdd } from "./kalio-basket";
 import { priceOf, productImage, productSrcset, dropSrcset } from "./kalio-catalog";
@@ -69,7 +70,7 @@ export default {
 
   computed: {
     currency() {
-      return this.GetUserSelectedCurrency()?.code;
+      return currentCurrency();
     },
 
     basketItems() {

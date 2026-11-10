@@ -3201,3 +3201,52 @@ body {
 html[data-ts-mode="dark"] .v-avatar[style*="background-color: rgb(255, 255, 255)"][style*="color: rgb(0, 0, 0)"] {
   color: #0f1729 !important;
 }
+
+/* ━━━━━━━━━━━━ Language and currency (components/region-switcher, Besti 1.0.19) ━━━━━━━━━━━━
+   The package's tokens, mapped to Besti's (they follow the palette, light,
+   dark and a custom colour). The pill sits first in the header's actions on
+   a wide screen, on the white bar; the phone gets a row in the departments
+   menu with the menu's other links. */
+:root {
+  --rs-ink: var(--b-ink);
+  --rs-muted: var(--b-muted);
+  --rs-line: var(--b-line);
+  --rs-line-strong: var(--b-line-2);
+  --rs-surface: var(--b-surface);
+  --rs-accent: var(--b-blue-t);
+  --rs-accent-soft: var(--b-blue-l);
+  --rs-on-accent: var(--b-on-brand);
+  --rs-btn: var(--b-blue);
+  --rs-on-btn: var(--b-on-brand);
+  --rs-pill-ink: var(--b-ink);
+  --rs-pill-bg: var(--b-page);
+  --rs-pill-bg-hover: var(--b-blue-l);
+  --rs-font: "Archivo", system-ui, sans-serif;
+}
+
+.b-acts > .rs-pick {
+  align-self: center;
+  margin-inline-end: 6px;
+}
+
+.b-region.rs-pick__btn {
+  height: 34px;
+  padding: 0 12px 0 10px;
+  font-size: 13px;
+}
+
+.b-mega__side .b-mega__region.rs-row {
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font: 700 14.5px "Archivo", sans-serif;
+
+  .rs-row__ic {
+    color: $blue-t;
+  }
+
+  &:hover {
+    background: $blue-l;
+    color: $blue-t !important;
+  }
+}

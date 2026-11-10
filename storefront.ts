@@ -44,6 +44,8 @@ import {SetupService} from "@selldone/core-js/server";
 import {Shop} from "@selldone/core-js/models";
 import { bootThemeSwitcher } from "./components/theme-switcher/theme-switcher"; // the shared theme switcher (Besti 1.0.11)
 import { BESTI_THEME } from "./components/besti/besti-theme";
+import { bootRegion, defineMessages } from "./components/region-switcher/region"; // the visitor's language and currency (Besti 1.0.19)
+import { BESTI_MESSAGES } from "./components/besti/i18n";
 
 const vuetify = VuetifyInstance(i18n);
 // Vuetify's light error red reads 4.5:1 on white (its #ff5252 is 3.3:1); set
@@ -91,6 +93,11 @@ app.use(components);
 
 // ━━━ Storefront SDK (xapi) ━━━
 StorefrontSDK.Setup(); // Set up the Shop SDK.
+
+// The visitor's language and currency (the header pill and the phone menu's
+// row; components/region-switcher, copied unchanged from new-shop-kits).
+defineMessages(BESTI_MESSAGES);
+bootRegion(store);
 
 // ━━━ Community SDK (capi) ━━━
 CapiCommunity.Setup(); // Setup community.

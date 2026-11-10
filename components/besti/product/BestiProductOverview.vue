@@ -140,7 +140,7 @@
               <span class="ms">{{ w.icon === "storefront" ? "storefront" : "local_shipping" }}</span>
               <span>
                 {{ w.word }}<template v-if="w.free"> · Free</template
-                ><template v-else-if="w.freeOver"> · Free over <u-price :amount="w.freeOver" :currency="w.currency" /></template>
+                ><template v-else-if="w.freeOver"> · Free over {{ rsMoney(w.freeOver, w.currency) }}</template>
               </span>
             </li>
             <li v-if="!ways.length"><span class="ms">local_shipping</span>Delivery options at checkout</li>
@@ -206,6 +206,8 @@
 </template>
 
 <script>
+import { money as regionMoney } from "../../region-switcher/region";
+import { currentCurrency } from "../../region-switcher/region";
 import KalioProductOverview from "../../kalio/product/KalioProductOverview.vue";
 import UCountDown from "@selldone/components-vue/ui/count-down/UCountDown.vue";
 import { waysOf } from "../../walio/walio-home";
@@ -223,7 +225,7 @@ export default {
 
   computed: {
     currency() {
-      return this.GetUserSelectedCurrency()?.code;
+      return currentCurrency();
     },
     productTo() {
       return { name: window.$storefront.routes.PRODUCT_PAGE, params: { product_id: this.$product.id } };
@@ -296,6 +298,10 @@ export default {
   },
 
   methods: {
+    /* An amount in its own currency, shown in the visitor's (region switcher). */
+    rsMoney(n, from, short = "auto") {
+      return regionMoney(n, from, { short });
+    },
     onResize() {
       this.compact = window.innerWidth < 900;
     },

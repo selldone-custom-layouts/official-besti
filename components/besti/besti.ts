@@ -1,3 +1,4 @@
+import { currentCurrency, formatMoney } from "../region-switcher/region";
 /*
  * Besti — shared reads and helpers for the department-store pages.
  *
@@ -354,17 +355,10 @@ export function colourName(color: string): string {
 
 /* ━━━━━━━━━━━━ Money as words ━━━━━━━━━━━━ */
 
+/** An amount already in `currency` (the visitor's, from priceOf / moneyOf),
+    formatted by the region switcher (Besti 1.0.19). */
 export function moneyText(amount: number, currency: string, whole = false): string {
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency || "USD",
-      minimumFractionDigits: whole ? 0 : 2,
-      maximumFractionDigits: whole ? 0 : 2,
-    }).format(amount);
-  } catch {
-    return String(amount);
-  }
+  return formatMoney(amount, currency || currentCurrency(), { short: whole });
 }
 
 /* ━━━━━━━━━━━━ Deal timers: the deal's own end ━━━━━━━━━━━━

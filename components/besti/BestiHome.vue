@@ -204,6 +204,7 @@
 </template>
 
 <script>
+import { currentCurrency } from "../region-switcher/region";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import BestiCard from "./BestiCard.vue";
 import BestiRail from "./BestiRail.vue";
@@ -262,7 +263,7 @@ export default {
 
   computed: {
     currency() {
-      return this.GetUserSelectedCurrency()?.code;
+      return currentCurrency();
     },
     allTo() {
       return catalogueRoute();

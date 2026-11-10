@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { currentCurrency } from "../../region-switcher/region";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import BestiDealOfDay from "../../besti/BestiDealOfDay.vue";
 import { catalogue, dealOfTheDay, dealsOf, mixByCategory } from "../../besti/besti";
@@ -77,7 +78,7 @@ export default {
 
   computed: {
     currency() {
-      return this.GetUserSelectedCurrency()?.code;
+      return currentCurrency();
     },
     search() {
       return String(this.$route.query.search || "").trim();

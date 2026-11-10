@@ -11,6 +11,7 @@
  * kalio-basket's queue, so quick taps are never lost.
  */
 
+import { currentCurrency } from "../region-switcher/region";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import { percentOff } from "../kalio/kalio-catalog";
 import { addVariant, basketLine, hasSizes, pendingLine, pendingLineFor, quickAdd, settling, shownCount, stepTo } from "../kalio/kalio-basket";
@@ -29,7 +30,7 @@ export default {
       return this.$store.getters.getShop;
     },
     currency(this: any) {
-      return this.GetUserSelectedCurrency()?.code;
+      return currentCurrency();
     },
     productTo(this: any) {
       return { name: window.$storefront.routes.PRODUCT_PAGE, params: { product_id: this.product?.id } };

@@ -7,6 +7,9 @@
   2. A white bar: the ink wordmark, a search with a department scope and a
      blue search button (suggestions while typing), Track order, Saved, Sign
      in (or the account), and a blue cart pill with the count and the total.
+     Before them, on a wide screen, the language and currency pill
+     (components/region-switcher; Besti 1.0.19); on a phone the same choice is a
+     row in the departments menu.
      (Besti 1.0.16: the Theme switcher is in the footer, BestiFooter.)
   3. A blue department bar: "All departments" opens a mega menu on a click
      and closes on a second click (no dark scrim behind it), then the live
@@ -100,20 +103,21 @@
       <span v-else class="b-header__sp"></span>
 
       <nav aria-label="Your account" class="b-acts">
-        <router-link :to="ordersTo" class="b-act -track"><span class="ms">local_shipping</span><span class="b-act__t">Track order</span></router-link>
+        <region-switcher-button v-if="!compact" button-class="b-region" />
+        <router-link :to="ordersTo" class="b-act -track"><span class="ms">local_shipping</span><span class="b-act__t">{{ t("header.track") }}</span></router-link>
         <component :is="user ? 'router-link' : 'button'" :to="user ? savedTo : undefined" :type="user ? undefined : 'button'" class="b-act -saved" @click="!user && signIn()">
-          <span class="ms">favorite</span><span class="b-act__t">Saved</span>
+          <span class="ms">favorite</span><span class="b-act__t">{{ t("header.saved") }}</span>
         </component>
         <router-link v-if="user" :to="accountTo" class="b-act -me">
           <span class="ms">person</span><span class="b-act__t">{{ firstName }}</span>
         </router-link>
-        <button v-else-if="!busyUser" class="b-act -me" type="button" @click="signIn"><span class="ms">person</span><span class="b-act__t">Sign in</span></button>
-        <span v-else class="b-act -me -wait"><span class="ms">person</span><span class="b-act__t">Account</span></span>
+        <button v-else-if="!busyUser" class="b-act -me" type="button" @click="signIn"><span class="ms">person</span><span class="b-act__t">{{ t("header.signIn") }}</span></button>
+        <span v-else class="b-act -me -wait"><span class="ms">person</span><span class="b-act__t">{{ t("header.account") }}</span></span>
 
         <button :aria-label="`Cart, ${units} items`" class="b-cartpill" type="button" @click="cart = true">
           <span class="ms fill">shopping_cart</span>
           <i v-if="units">{{ units }}</i>
-          <span class="b-cartpill__t"><u-price v-if="units" :amount="cartTotal" :currency="currency" /><template v-else>Cart</template></span>
+          <span class="b-cartpill__t"><template v-if="units">{{ cartMoney }}</template><template v-else>{{ t("header.cart") }}</template></span>
         </button>
       </nav>
     </div>
@@ -122,7 +126,7 @@
     <nav aria-label="Departments" class="b-dept">
       <div ref="deptRow" class="b-dept__in">
         <button :aria-expanded="mega ? 'true' : 'false'" class="b-dept__all" type="button" @click="toggleMega">
-          <span class="ms">{{ mega ? "close" : "menu" }}</span>All departments
+          <span class="ms">{{ mega ? "close" : "menu" }}</span>{{ t("header.allDepartments") }}
         </button>
         <router-link v-for="c in barCats" :key="c.id" :class="{ '-on': $route.params.category_name === c.name }" :to="catTo(c)" class="b-dept__a">
           {{ c.title || c.name }}
@@ -136,8 +140,8 @@
           </div>
         </v-menu>
         <span class="b-dept__sp"></span>
-        <router-link :to="dealsTo" class="b-dept__a -deals"><span class="ms fill">sell</span>Deals</router-link>
-        <router-link :to="newTo" class="b-dept__a">New arrivals</router-link>
+        <router-link :to="dealsTo" class="b-dept__a -deals"><span class="ms fill">sell</span>{{ t("header.deals") }}</router-link>
+        <router-link :to="newTo" class="b-dept__a">{{ t("header.new") }}</router-link>
         <v-menu v-if="brands.length && !compact" location="bottom end" offset="0">
           <template v-slot:activator="{ props, isActive }">
             <button class="b-dept__a" type="button" v-bind="props">Brands<span :class="{ '-up': isActive }" class="ms">expand_more</span></button>
@@ -183,14 +187,16 @@
               @click="megaMore = !megaMore"
             >
               <span aria-hidden="true" class="b-mega__ic -more"><span class="ms">expand_more</span></span>
-              <span>{{ megaMore ? "Show fewer" : `Show ${megaRest.length} more` }}</span>
+              <span>{{ megaMore ? t("menu.showFewer") : t("menu.showMore", { n: megaRest.length }) }}</span>
             </button>
           </div>
           <div class="b-mega__side">
-            <router-link :to="dealsTo"><span class="ms fill">sell</span>Today’s deals</router-link>
-            <router-link :to="newTo"><span class="ms">new_releases</span>New arrivals</router-link>
-            <router-link :to="allTo"><span class="ms">grid_view</span>All products</router-link>
-            <router-link :to="ordersTo"><span class="ms">local_shipping</span>Track an order</router-link>
+            <router-link :to="dealsTo"><span class="ms fill">sell</span>{{ t("menu.todaysDeals") }}</router-link>
+            <router-link :to="newTo"><span class="ms">new_releases</span>{{ t("header.new") }}</router-link>
+            <router-link :to="allTo"><span class="ms">grid_view</span>{{ t("menu.allProducts") }}</router-link>
+            <router-link :to="ordersTo"><span class="ms">local_shipping</span>{{ t("menu.trackOrder") }}</router-link>
+            <!-- Phone and tablet: language and currency (the desktop has the header pill). -->
+            <region-sheet v-if="compact" keep-menu row-class="b-mega__region" />
           </div>
         </div>
       </div>
@@ -223,18 +229,21 @@
 </template>
 
 <script>
+import { convert, currentCurrency, formatMoney, t } from "../../region-switcher/region";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import { EventBus } from "@selldone/components-vue/utils/events/EventBus.ts";
 import BestiLogo from "../BestiLogo.vue";
 import BestiDealClock from "../BestiDealClock.vue";
 import KalioBasketDrawer from "../../kalio/shell/KalioBasketDrawer.vue";
+import RegionSwitcherButton from "../../region-switcher/RegionSwitcherButton.vue";
+import RegionSheet from "../../region-switcher/RegionSheet.vue";
 import { aisleRoute, aisles, catalogueRoute, dealsRoute } from "../../kalio/kalio-catalog";
 import { basketView } from "../../kalio/kalio-basket";
 import { brandRoute, brandsOf, catalogue, dealEnd, dealOfTheDay, leadVariant, moneyOf, moneyText, percentOff } from "../besti";
 
 export default {
   name: "BestiHeader",
-  components: { BestiLogo, BestiDealClock, KalioBasketDrawer },
+  components: { BestiLogo, BestiDealClock, KalioBasketDrawer, RegionSwitcherButton, RegionSheet },
   mixins: [CurrencyMixin],
   inject: ["$shop"],
 
@@ -273,7 +282,7 @@ export default {
       return this.windowWidth < 900;
     },
     currency() {
-      return this.GetUserSelectedCurrency()?.code;
+      return currentCurrency();
     },
     units() {
       return this.getBaskets().reduce((sum, b) => sum + (b?.items || []).reduce((n, it) => n + (it.count || 0), 0), 0);
@@ -283,11 +292,20 @@ export default {
       let sum = 0;
       for (const b of this.getBaskets()) {
         if (!b?.items?.length) continue;
-        if (typeof b.bill?.price === "number") sum += b.bill.price;
-        else if (typeof b.price === "number") sum += b.price;
-        else for (const it of b.items) sum += Number(it.price || 0) * (it.count || 0);
+        let n = 0;
+        if (typeof b.bill?.price === "number") n = b.bill.price;
+        else if (typeof b.price === "number") n = b.price;
+        else for (const it of b.items) n += Number(it.price || 0) * (it.count || 0);
+        /* Each basket in its own currency, shown in the visitor's: the server
+           reprices the cart after a pick; this covers the moment before. */
+        const from = b.bill?.currency || b.currency || this.currency;
+        const c = convert(n, from, this.currency);
+        sum += c === null ? n : c;
       }
       return Math.max(0, sum);
+    },
+    cartMoney() {
+      return formatMoney(this.cartTotal, this.currency);
     },
     ordersTo() {
       return { name: window.$storefront.routes.HISTORY_ORDERS_PHYSICAL };
@@ -409,6 +427,7 @@ export default {
   },
 
   methods: {
+    t,
     money(n) {
       return moneyText(n, this.currency);
     },
@@ -436,7 +455,8 @@ export default {
       this.mega = !this.mega;
     },
     outside(e) {
-      const inside = this.$refs.mega?.contains(e.target) || this.$refs.deptRow?.querySelector(".b-dept__all")?.contains(e.target);
+      /* The language and currency sheet is teleported to <body>: a tap in it is not "outside". */
+      const inside = this.$refs.mega?.contains(e.target) || this.$refs.deptRow?.querySelector(".b-dept__all")?.contains(e.target) || e.target.closest?.(".rs-sheet-wrap");
       if (!inside) this.mega = false;
     },
     /* Suggestions while typing: the input's own value (v-model waits for an

@@ -92,7 +92,7 @@
               <span
                 ><b>{{ w.word }}</b> {{ w.line }}.
                 <template v-if="w.free">Free.</template>
-                <template v-else-if="w.freeOver">Free on orders over <u-price :amount="w.freeOver" :currency="w.currency" />.</template>
+                <template v-else-if="w.freeOver">Free on orders over {{ rsMoney(w.freeOver, w.currency) }}.</template>
               </span>
             </li>
           </ul>
@@ -148,6 +148,7 @@
 </template>
 
 <script lang="ts">
+import { money as regionMoney } from "@app-storefront/components/region-switcher/region";
 import NotificationService from "@selldone/components-vue/plugins/notification/NotificationService.ts";
 
 import BestiProductOverview from "../../components/besti/product/BestiProductOverview.vue";
@@ -344,6 +345,10 @@ export default {
   },
 
   methods: {
+    /* An amount in its own currency, shown in the visitor's (region switcher). */
+    rsMoney(n, from, short = "auto") {
+      return regionMoney(n, from, { short });
+    },
     jump(id) {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     },

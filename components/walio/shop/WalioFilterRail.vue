@@ -56,9 +56,9 @@
         @end="applyPrice(price_draft)"
       ></v-range-slider>
       <div class="b-prange">
-        <label><span>$</span><input :value="Math.round(price_draft[0])" aria-label="Lowest price" inputmode="numeric" @change="typed(0, $event)" /></label>
+        <label><span>{{ sign }}</span><input :value="Math.round(price_draft[0])" aria-label="Lowest price" inputmode="numeric" @change="typed(0, $event)" /></label>
         <em>to</em>
-        <label><span>$</span><input :value="Math.round(price_draft[1])" aria-label="Highest price" inputmode="numeric" @change="typed(1, $event)" /></label>
+        <label><span>{{ sign }}</span><input :value="Math.round(price_draft[1])" aria-label="Highest price" inputmode="numeric" @change="typed(1, $event)" /></label>
       </div>
     </details>
     <details v-if="!ignore.includes('discount')" class="w-grp" open>
@@ -200,6 +200,7 @@
 </template>
 
 <script>
+import { money as regionMoney, currentCurrency, formatMoney, signOf } from "../../region-switcher/region";
 import UPrice from "@selldone/components-vue/ui/price/UPrice.vue";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import { PriceHelper } from "@selldone/core-js/helper";
@@ -264,7 +265,7 @@ export default {
       return countOn(this.modelValue);
     },
     currency() {
-      return this.GetUserSelectedCurrency()?.code;
+      return currentCurrency();
     },
     price_rows() {
       return (this.filters?.prices || []).filter((row) => this.rate(row.currency, true));
@@ -284,6 +285,10 @@ export default {
       const span = this.price_max - this.price_min;
       return span > 200 ? 5 : span > 40 ? 1 : 0.5;
     },
+    /* The visitor's currency sign for the min / max boxes. */
+    sign() {
+      return signOf(this.currency || currentCurrency());
+    },
     /* Three quick ranges cut from the aisle's own prices. */
     quick() {
       const lo = this.price_min;
@@ -291,7 +296,7 @@ export default {
       if (hi - lo < 3) return [];
       const a = Math.round(lo + (hi - lo) / 3);
       const b = Math.round(lo + ((hi - lo) * 2) / 3);
-      const cur = (n) => (this.currency === "USD" ? `$${n}` : `${n}`);
+      const cur = (n) => formatMoney(n, this.currency, { short: true });
       return [
         { label: `Under ${cur(a)}`, range: [lo, a] },
         { label: `${cur(a)} – ${cur(b)}`, range: [a, b] },
@@ -324,6 +329,10 @@ export default {
   },
 
   methods: {
+    /* An amount in its own currency, shown in the visitor's (region switcher). */
+    rsMoney(n, from, short = "auto") {
+      return regionMoney(n, from, { short });
+    },
     sortName,
     valueLabel,
     swatchBg,

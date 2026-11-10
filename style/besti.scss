@@ -3187,3 +3187,17 @@ body {
     transition: none !important;
   }
 }
+
+/* Selldone's sign-in buttons (SShopLogin: the article's comments, the orders
+   page). "Continue with Google" is white on Google's #4285f4, 3.56:1; Google's
+   own darker button blue reads 5.3:1. In dark mode the email button's white
+   avatar is caught by the switcher's inline-ink rule (its inline style says
+   "color: rgb(0, 0, 0)"), which turned the @ icon light on white; a white
+   avatar keeps dark ink. Besti 1.0.19. */
+.v-btn[style*="background-color: rgb(66, 133, 244)"] {
+  background-color: #1967d2 !important;
+}
+
+html[data-ts-mode="dark"] .v-avatar[style*="background-color: rgb(255, 255, 255)"][style*="color: rgb(0, 0, 0)"] {
+  color: #0f1729 !important;
+}

@@ -152,11 +152,39 @@
            a click elsewhere, or going to a page). No scrim. -->
       <div v-if="mega" ref="mega" class="b-mega" @keydown.esc="mega = false">
         <div class="b-mega__in">
+          <!-- On a phone or tablet (under 900px) more than 8 departments show
+               the first 6 and "Show N more" (the owner's option A, 10 November
+               2026); the rest open in place and the button reads "Show fewer". -->
           <div class="b-mega__grid">
-            <router-link v-for="c in cats" :key="c.id" :to="catTo(c)" class="b-mega__item">
+            <router-link v-for="c in megaFirst" :key="c.id" :to="catTo(c)" class="b-mega__item">
               <span class="b-mega__ic"><img v-if="c.icon" :src="catIcon(c)" alt="" /></span>
               <span><b>{{ c.title || c.name }}</b><small v-if="c.description">{{ c.description }}</small></span>
             </router-link>
+            <div v-if="megaRest.length" id="b-mega-more" :class="{ '-open': megaMore }" class="b-mega__extra">
+              <div>
+                <router-link
+                  v-for="(c, i) in megaRest"
+                  :key="c.id"
+                  :style="{ transitionDelay: megaMore ? `${i * 20}ms` : '0ms' }"
+                  :to="catTo(c)"
+                  class="b-mega__item"
+                >
+                  <span class="b-mega__ic"><img v-if="c.icon" :src="catIcon(c)" alt="" /></span>
+                  <span><b>{{ c.title || c.name }}</b><small v-if="c.description">{{ c.description }}</small></span>
+                </router-link>
+              </div>
+            </div>
+            <button
+              v-if="megaRest.length"
+              :aria-expanded="megaMore ? 'true' : 'false'"
+              aria-controls="b-mega-more"
+              class="b-mega__more"
+              type="button"
+              @click="megaMore = !megaMore"
+            >
+              <span aria-hidden="true" class="b-mega__ic -more"><span class="ms">expand_more</span></span>
+              <span>{{ megaMore ? "Show fewer" : `Show ${megaRest.length} more` }}</span>
+            </button>
           </div>
           <div class="b-mega__side">
             <router-link :to="dealsTo"><span class="ms fill">sell</span>Today’s deals</router-link>
@@ -226,6 +254,7 @@ export default {
     cursor: -1,
     open_suggest: false,
     mega: false,
+    megaMore: false,
     cart: false,
     windowWidth: typeof window !== "undefined" ? window.innerWidth : 1440,
   }),
@@ -317,6 +346,15 @@ export default {
     moreCats() {
       return this.cats.slice(this.barCount);
     },
+    /* The departments menu on a phone or tablet: more than 8 show the first
+       6 (the merchant's order) and "Show N more"; 8 or fewer show them all.
+       A wide screen always shows them all. */
+    megaFirst() {
+      return this.compact && this.cats.length > 8 ? this.cats.slice(0, 6) : this.cats;
+    },
+    megaRest() {
+      return this.compact && this.cats.length > 8 ? this.cats.slice(6) : [];
+    },
     scopeTitle() {
       const c = this.cats.find((x) => x.name === this.scope);
       return c ? c.title || c.name : "All";
@@ -339,6 +377,7 @@ export default {
       this.$store.commit("setForceHideNavigation", open);
     },
     mega(open) {
+      this.megaMore = false; /* each time the menu opens it starts collapsed */
       if (open) document.addEventListener("click", this.outside, true);
       else document.removeEventListener("click", this.outside, true);
     },

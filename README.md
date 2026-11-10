@@ -35,7 +35,7 @@
 - yellow (`#ffd91a`) only as an accent: deal flags, the Deal of the Day, the logo's dot, "Deals";
 - sale red for "Save $X", navy for the deal strip and the footer;
 - Archivo type and Material Symbols Rounded icons;
-- a **Theme** action at the top right of the header on Besti's own showcase shop: five colour palettes (Besti blue, Violet, Emerald, Copper, Magenta), a **Custom colour** and Light / Dark; one click changes the whole site at once, Selldone's own parts too, and the choice stays in the browser.
+- a **Theme** row in the footer on Besti's own showcase shop: five colour palettes (Besti blue, Violet, Emerald, Copper, Magenta), a **Custom colour** and Light / Dark; one click changes the whole site at once, Selldone's own parts too, and the choice stays in the browser.
 
 It runs on **[besti.selldone.shop](https://besti.selldone.shop)**, one address of the Selldone shop Digini. Selldone lets each domain of a shop carry its own Layout.
 

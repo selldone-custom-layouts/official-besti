@@ -6,9 +6,8 @@
      "Shop the deal".
   2. A white bar: the ink wordmark, a search with a department scope and a
      blue search button (suggestions while typing), Track order, Saved, Sign
-     in (or the account), Theme (the shared switcher, components/theme-switcher:
-     the palettes, a custom colour and Light / Dark in a small panel; only on
-     Besti's showcase shop), and a blue cart pill with the count and the total.
+     in (or the account), and a blue cart pill with the count and the total.
+     (Besti 1.0.16: the Theme switcher is in the footer, BestiFooter.)
   3. A blue department bar: "All departments" opens a mega menu on a click
      and closes on a second click (no dark scrim behind it), then the live
      category names that fit and "More", and on the right Deals (yellow),
@@ -23,7 +22,7 @@
   <header v-if="!$store.getters.getIsNative" class="b-header">
     <!-- ▆▆▆▆ 1. Today's deal ▆▆▆▆
          The strip keeps its place while the catalogue loads, so the header
-         never shifts down under anything already placed (the theme panel). -->
+         never shifts down under anything already placed. -->
     <div v-if="dotd || !products_loaded" class="b-strip">
       <template v-if="dotd">
         <span class="b-strip__deal">
@@ -110,10 +109,6 @@
         </router-link>
         <button v-else-if="!busyUser" class="b-act -me" type="button" @click="signIn"><span class="ms">person</span><span class="b-act__t">Sign in</span></button>
         <span v-else class="b-act -me -wait"><span class="ms">person</span><span class="b-act__t">Account</span></span>
-
-        <theme-switcher-button button-class="b-act -theme">
-          <span class="ms">palette</span><span class="b-act__t">Theme</span>
-        </theme-switcher-button>
 
         <button :aria-label="`Cart, ${units} items`" class="b-cartpill" type="button" @click="cart = true">
           <span class="ms fill">shopping_cart</span>
@@ -204,7 +199,6 @@ import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin
 import { EventBus } from "@selldone/components-vue/utils/events/EventBus.ts";
 import BestiLogo from "../BestiLogo.vue";
 import BestiDealClock from "../BestiDealClock.vue";
-import ThemeSwitcherButton from "../../theme-switcher/ThemeSwitcherButton.vue";
 import KalioBasketDrawer from "../../kalio/shell/KalioBasketDrawer.vue";
 import { aisleRoute, aisles, catalogueRoute, dealsRoute } from "../../kalio/kalio-catalog";
 import { basketView } from "../../kalio/kalio-basket";
@@ -212,7 +206,7 @@ import { brandRoute, brandsOf, catalogue, dealEnd, dealOfTheDay, leadVariant, mo
 
 export default {
   name: "BestiHeader",
-  components: { BestiLogo, BestiDealClock, ThemeSwitcherButton, KalioBasketDrawer },
+  components: { BestiLogo, BestiDealClock, KalioBasketDrawer },
   mixins: [CurrencyMixin],
   inject: ["$shop"],
 

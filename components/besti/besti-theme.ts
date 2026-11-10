@@ -1,8 +1,9 @@
 /*
- * Besti — the theme switcher's config (the header's "Theme" action; the
+ * Besti — the theme switcher's config (the footer's "Theme" row; the
  * owner's rules of 9 November 2026: colour palettes and Light / Dark, a click
- * changes the whole site; then "at the top of the header"; then "the same in
- * every Layout": Besti runs the shared switcher, components/theme-switcher/).
+ * changes the whole site; "the same in every Layout": Besti runs the shared
+ * switcher, components/theme-switcher/; 10 November 2026: in the footer, not
+ * the header).
  *
  * This file is everything Besti-specific: its five palettes, which Besti
  * variables each palette value feeds (the Kalio base reads Besti's: --k-green

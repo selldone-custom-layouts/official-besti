@@ -2898,6 +2898,21 @@ body {
     }
   }
 
+  /* The Theme row (the shared switcher's footer row) in a strip of its own,
+     on the columns' edge, above the legal row. The footer is navy in both
+     modes, so its words and rings are white: 4.5:1 or more for text, 3:1 or
+     more for the rings, the switch's outline and the swatch edges. */
+  &__theme {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    --ts-ink: #fff;
+    --ts-muted: rgba(255, 255, 255, 0.82);
+    --ts-line: rgba(255, 255, 255, 0.5);
+    --ts-ring: #fff;
+    --ts-swatch-edge: rgba(255, 255, 255, 0.42);
+  }
+
   &__legal {
     display: flex;
     flex-wrap: wrap;
@@ -3071,11 +3086,4 @@ body {
     display: flex;
     flex-direction: column;
   }
-}
-
-/* The header's Theme action (the shared switcher's button, with Besti's own
-   action class): open = the same tint as a hover. */
-.b-act.-theme.-open {
-  color: $blue-t !important;
-  background: $blue-l;
 }

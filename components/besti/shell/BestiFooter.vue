@@ -4,10 +4,11 @@
   A blue newsletter band ("Deals in your inbox", Selldone's own subscribe),
   then navy columns: the white wordmark with the shop's description and its
   social links, Departments (live), Your orders, About (the merchant's own
-  footer menu when there is one, else the standard pages) and Policies; and
-  (1.0.10 trial: the Theme row is in the header, BestiThemePicker); a legal row with a small "made with selldone" and
-  Selldone's cookie settings. A shop with custom footer code keeps
-  Selldone's footer.
+  footer menu when there is one, else the standard pages) and Policies; the
+  Theme row (Besti 1.0.16: the shared switcher's footer row, palettes, a
+  custom colour and Light / Dark; only on Besti's showcase shop); and a legal
+  row with a small "made with selldone" and Selldone's cookie settings. A
+  shop with custom footer code keeps Selldone's footer.
 -->
 <template>
   <footer class="b-footer">
@@ -59,8 +60,10 @@
       </nav>
     </div>
 
-    <!-- 1.0.10 trial: the Theme row moved to the header (BestiThemePicker);
-         1.0.9, with this row in the footer, is the rollback. -->
+    <!-- The Theme row (the owner, 10 November 2026: in the footer, not the
+         header). Showcase shops only: elsewhere the row renders nothing. -->
+    <div v-if="themeOn" class="b-wrap b-footer__theme"><theme-switcher-row /></div>
+
     <div class="b-wrap b-footer__legal">
       <span>© {{ year }} {{ shopTitle }}</span>
       <router-link :to="{ name: r.SHOP_PROFILE_PAGE_TERMS }">Terms</router-link>
@@ -82,16 +85,22 @@ import UCurrencySelector from "@selldone/components-vue/ui/currency/selector/UCu
 import SFooterSectionGdpr from "@selldone/components-vue/storefront/footer/section/gdpr/SFooterSectionGdpr.vue";
 import SFooterSectionSelldone from "@selldone/components-vue/storefront/footer/section/selldone/SFooterSectionSelldone.vue";
 import { EventBus } from "@selldone/components-vue/utils/events/EventBus.ts";
+import ThemeSwitcherRow from "../../theme-switcher/ThemeSwitcherRow.vue";
+import { themeState } from "../../theme-switcher/theme-switcher";
 import { aisleRoute, aisles, catalogueRoute } from "../../kalio/kalio-catalog";
 
 export default {
   name: "BestiFooter",
-  components: { BestiLogo, SStorefrontSocialButtons, SLanguageSelector, UCurrencySelector, SFooterSectionGdpr, SFooterSectionSelldone },
+  components: { BestiLogo, SStorefrontSocialButtons, SLanguageSelector, UCurrencySelector, SFooterSectionGdpr, SFooterSectionSelldone, ThemeSwitcherRow },
   inject: ["$shop"],
 
-  data: () => ({ cats: [], email: "", busy: false, sent: false, error: null, year: new Date().getFullYear() }),
+  data: () => ({ cats: [], email: "", busy: false, sent: false, error: null, year: new Date().getFullYear(), theme: themeState }),
 
   computed: {
+    /* The switcher shows only where the package allows it (showcase shops). */
+    themeOn() {
+      return this.theme.enabled;
+    },
     r() {
       return window.$storefront.routes;
     },

@@ -29,7 +29,7 @@ When a merchant asks for a theme ("use the yellow theme", "my brand colour is #F
 | `palette` | `"blue"` (Besti blue, the default), `"violet"`, `"emerald"`, `"copper"`, `"magenta"` |
 | `brandColor` | any `"#RRGGBB"`; when set it replaces `palette` |
 | `mode` | `"light"` or `"dark"` |
-| `themeSwitcher` | `"showcase"` (the visitor switcher shows only on Besti's own showcase shop, Digini 15549; the default), `"on"` (the merchant's visitors get a Theme button in the header), `"off"` |
+| `themeSwitcher` | `"showcase"` (the visitor switcher shows only on Besti's own showcase shop, Digini 15549; the default), `"on"` (the merchant's visitors get a Theme row in the footer), `"off"` |
 | `textOnBrand` | only with `brandColor`: `"auto"` (a light brand such as yellow keeps its colour, with dark words on it) or `"white"` (white words; a light colour is darkened) |
 
 Worked examples (change only these lines; leave the rest of the file as it is):
@@ -50,4 +50,4 @@ Then release and check:
    ```sh
    PAGES="home=/,category=/<a category>,product=/product/<id>" node components/theme-switcher/tools/contrast-audit.cjs https://<your shop> ".b-hero__main"
    ```
-3. If the visitor switcher is on, also run `components/theme-switcher/tools/header-check.cjs` (Besti's selectors: `WAIT=".b-hero__main" BRAND=".b-header__logo" CART=".b-cartpill" ACCOUNT=".b-act.-me" STORAGE_KEY=besti-theme`).
+3. If the visitor switcher is on, also check the footer's Theme row (`.b-footer__theme`, above the legal row): each palette, Custom colour and Light / Dark repaint the site and survive a reload, and `components/theme-switcher/tools/contrast-audit.cjs` prints `TOTAL 0` in light and dark. (`header-check.cjs` tests the old header button; Besti no longer has one.)

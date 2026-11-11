@@ -202,7 +202,9 @@
     margin: 26px 0 0;
     padding: 16px 22px;
     border-inline-start: 4px solid var(--k-leaf);
-    border-radius: 0 18px 18px 0;
+    border-radius: 0;
+    border-start-end-radius: 18px;
+    border-end-end-radius: 18px;
     background: var(--k-green-soft);
     color: var(--k-green-deep-t);
   }

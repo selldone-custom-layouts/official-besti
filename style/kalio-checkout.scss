@@ -3276,7 +3276,8 @@ $k-ico-gift: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewB
 
   &__bubble {
     padding: 10px 14px;
-    border-radius: 18px 18px 18px 6px;
+    border-radius: 18px;
+    border-end-start-radius: 6px;
     background: var(--k-wash);
     font-size: 15px;
     line-height: 1.45;
@@ -3285,7 +3286,9 @@ $k-ico-gift: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewB
     overflow-wrap: anywhere;
 
     .-mine & {
-      border-radius: 18px 18px 6px 18px;
+      border-radius: 18px;
+      border-end-start-radius: 18px;
+      border-end-end-radius: 6px;
       background: var(--k-green);
       color: var(--b-on-brand);
     }

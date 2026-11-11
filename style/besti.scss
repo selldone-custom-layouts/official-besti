@@ -406,10 +406,14 @@ body {
     align-items: center;
     flex: none;
     max-width: 170px;
-    padding: 0 8px 0 14px;
+    padding: 0;
+    padding-inline: 14px 8px;
     background: $page;
     border-inline-end: 1px solid $line;
-    border-radius: 6px 0 0 6px;
+    /* joined to the field: only its outer (start) side is round, in either direction (Besti 1.0.28) */
+    border-radius: 0;
+    border-start-start-radius: 6px;
+    border-end-start-radius: 6px;
     cursor: pointer;
 
     select {
@@ -460,7 +464,9 @@ body {
     width: 54px;
     flex: none;
     border: 0;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0;
+    border-start-end-radius: 5px;
+    border-end-end-radius: 5px;
     background: $blue;
     color: var(--b-on-brand) !important; /* Selldone's [type=button] { color: inherit } loads after */
     display: grid;
@@ -3402,4 +3408,52 @@ html[dir="rtl"] .b-strip__t s {
 
 :is(:lang(ar), :lang(hi)):not(.discount-percent):not(#b-joined):not(#b-joined) {
   word-spacing: normal !important;
+}
+
+/* ━━━━━━━━━━━━ Active tabs: a tinted pill, never a bar under the words ━━━━━━━━━━━━
+   The owner's no-underline rule covers tab indicators too (Besti 1.0.29): the
+   account tabs, the journal's topics, the shelf tabs and any Vuetify v-tabs
+   mark the chosen one with Besti's light blue, its blue words and weight. */
+.k-acct__tabs a {
+  height: 40px !important;
+  margin-block: 6px;
+  border-bottom: 0 !important;
+  border-radius: 999px;
+
+  &.-on {
+    background: $blue-l;
+    color: $blue-t !important;
+    font-weight: 700;
+
+    .v-icon {
+      color: $blue-t !important;
+    }
+  }
+}
+
+.k-journal__tabs a,
+.w-tabs button {
+  margin-block: 4px;
+  padding: 8px 14px !important;
+  border: 0 !important;
+  border-radius: 999px;
+  box-shadow: none !important;
+
+  &.-on {
+    background: $blue-l;
+    color: $blue-t !important;
+    font-weight: 700;
+    box-shadow: none !important;
+  }
+}
+
+.v-tab__slider {
+  display: none !important;
+}
+
+.v-tab.v-tab--selected {
+  border-radius: 999px !important;
+  background: $blue-l !important;
+  color: $blue-t !important;
+  font-weight: 700;
 }

@@ -8,7 +8,7 @@
   same way.
 -->
 <template>
-  <component :is="to ? 'router-link' : 'span'" :aria-label="`${word} home`" :class="{ '-light': light }" :to="to" class="b-logo">
+  <component :is="to ? 'router-link' : 'span'" :aria-label="t('besti.logo.home', '{name} home', { name: word })" :class="{ '-light': light }" :to="to" class="b-logo">
     <template v-for="(part, i) in parts" :key="i"
       ><span v-if="part === 'i'" aria-hidden="true" class="b-logo__i">ı</span><template v-else>{{ part }}</template></template
     >

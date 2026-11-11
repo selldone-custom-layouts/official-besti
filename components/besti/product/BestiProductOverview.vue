@@ -19,7 +19,7 @@
 <template>
   <div :class="{ '-quick': quickBuyMode }" class="b-pdp">
     <!-- ▆▆▆▆ 1. Gallery ▆▆▆▆ -->
-    <section v-if="showCover" aria-label="Product images" class="b-pdp__media">
+    <section v-if="showCover" :aria-label="t('besti.ui.productImages', 'Product images')" class="b-pdp__media">
       <!-- The thumbnails in one row under the picture, never a side column
            (it grew far longer than the picture with many photos). -->
       <s-shop-product-slide-show :current-variant="current_variant" :vertical="false" />
@@ -30,15 +30,15 @@
       <router-link v-if="$product.brand" :to="brandTo" class="b-brand">{{ $product.brand }}</router-link>
       <h1 class="b-pdp__title">{{ $product.title }}</h1>
       <div class="b-pdp__meta">
-        <span v-if="$product.sku">SKU {{ $product.sku }}</span>
-        <span v-else>Item {{ $product.id }}</span>
+        <span v-if="$product.sku">{{ t("besti.pdp.sku", "SKU {sku}", { sku: $product.sku }) }}</span>
+        <span v-else>{{ t("besti.pdp.item", "Item {id}", { id: $product.id }) }}</span>
         <a v-if="$product.rate_count && $product.rate" class="b-pdp__rate" href="#b-reviews" @click.prevent="toReviews">
           <span :style="{ '--k-rate': $product.rate }" class="k-stars"></span>
           <b>{{ Number($product.rate).toFixed(1) }}</b>
-          ({{ $product.rate_count }} {{ $product.rate_count === 1 ? "review" : "reviews" }})
+          ({{ t("besti.pdp.reviewCount", { one: "{n} review", other: "{n} reviews" }, { n: $product.rate_count }) }})
         </a>
         <a v-else-if="!quickBuyMode" class="b-pdp__rate -none" href="#b-reviews" @click.prevent="toReviews">
-          <span class="k-stars" style="--k-rate: 0"></span>No reviews yet
+          <span class="k-stars" style="--k-rate: 0"></span>{{ t("besti.ui.noReviewsYet", "No reviews yet") }}
         </a>
       </div>
 
@@ -67,7 +67,7 @@
               <i v-if="t.swatch" :style="{ background: t.swatch }" aria-hidden="true"></i>{{ t.label }}
             </span>
             <small v-if="t.price !== null"><u-price :amount="t.price" :currency="currency" /></small>
-            <small v-if="!(t.v.quantity > 0)" class="-out">Out of stock</small>
+            <small v-if="!(t.v.quantity > 0)" class="-out">{{ t("besti.ui.outOfStock", "Out of stock") }}</small>
           </button>
         </div>
       </div>
@@ -90,14 +90,14 @@
       </div>
 
       <div v-if="keySpecs.length && !quickBuyMode" class="b-pdp__specs">
-        <h2>Key specs</h2>
+        <h2>{{ t("besti.ui.keySpecs", "Key specs") }}</h2>
         <dl>
           <template v-for="row in keySpecs" :key="row.key">
             <dt>{{ row.key }}</dt>
             <dd>{{ row.value }}</dd>
           </template>
         </dl>
-        <a class="b-link" href="#b-specs" @click.prevent="toSpecs">All specifications<span class="ms">chevron_right</span></a>
+        <a class="b-link" href="#b-specs" @click.prevent="toSpecs">{{ t("besti.ui.allSpecifications", "All specifications") }}<span class="ms b-flip">chevron_right</span></a>
       </div>
     </section>
 
@@ -116,13 +116,13 @@
         <template v-else>
           <div class="b-price -lg">
             <u-price :amount="money.now" :currency="currency" class="b-price__now" />
-            <span v-if="money.save > 0" class="b-save">Save {{ moneyWhole(money.save) }}</span>
+            <span v-if="money.save > 0" class="b-save">{{ t("besti.card.save", "Save {amount}", { amount: moneyWhole(money.save) }) }}</span>
           </div>
-          <div class="b-was"><template v-if="money.was">Was <s><u-price :amount="money.was" :currency="currency" /></s></template></div>
+          <div class="b-was"><template v-if="money.was">{{ t("besti.ui.was", "Was") }} <s><u-price :amount="money.was" :currency="currency" /></s></template></div>
           <!-- The deal's own end (the chosen variant's when it has its own
                pricing), on Selldone's countdown; no end date, no clock. -->
           <div v-if="dealEndsAt" class="b-buybox__deal">
-            <span class="b-buybox__dealt"><span class="ms">schedule</span>Deal ends in</span>
+            <span class="b-buybox__dealt"><span class="ms">schedule</span>{{ t("besti.ui.dealEndsIn", "Deal ends in") }}</span>
             <u-count-down :end="dealEndsAt" />
           </div>
         </template>
@@ -131,19 +131,19 @@
         <ul class="b-buybox__facts">
           <li :class="stock > 0 ? '-ok' : '-no'">
             <span class="ms">{{ stock > 0 ? "check_circle" : "cancel" }}</span>
-            <template v-if="stock > 0 && stock <= 5">Only {{ stock }} left</template>
-            <template v-else-if="stock > 0">In stock</template>
-            <template v-else>Out of stock</template>
+            <template v-if="stock > 0 && stock <= 5">{{ t("besti.pdp.onlyLeft", "Only {n} left", { n: stock }) }}</template>
+            <template v-else-if="stock > 0">{{ t("besti.ui.inStock", "In stock") }}</template>
+            <template v-else>{{ t("besti.ui.outOfStock", "Out of stock") }}</template>
           </li>
           <template v-if="!quickBuyMode">
             <li v-for="w in ways" :key="w.key">
               <span class="ms">{{ w.icon === "storefront" ? "storefront" : "local_shipping" }}</span>
               <span>
-                {{ w.word }}<template v-if="w.free"> · Free</template
-                ><template v-else-if="w.freeOver"> · Free over {{ rsMoney(w.freeOver, w.currency) }}</template>
+                {{ w.word }}<template v-if="w.free"> · {{ t("besti.pdp.free", "Free") }}</template
+                ><template v-else-if="w.freeOver"> · {{ t("shipping.freeOver", "Free over {amount}", { amount: rsMoney(w.freeOver, w.currency) }) }}</template>
               </span>
             </li>
-            <li v-if="!ways.length"><span class="ms">local_shipping</span>Delivery options at checkout</li>
+            <li v-if="!ways.length"><span class="ms">local_shipping</span>{{ t("besti.ui.deliveryOptionsAtCheckout", "Delivery options at checkout") }}</li>
           </template>
         </ul>
 
@@ -177,21 +177,21 @@
 
         <div class="b-buybox__acts">
           <button :aria-pressed="comparing ? 'true' : 'false'" :class="{ '-on': comparing }" class="b-btn -line" type="button" @click="toggleCompare">
-            <span class="ms">{{ comparing ? "check_box" : "compare_arrows" }}</span>{{ comparing ? "Comparing" : "Compare" }}
+            <span class="ms">{{ comparing ? "check_box" : "compare_arrows" }}</span>{{ comparing ? t("besti.ui.comparing", "Comparing") : t("besti.ui.compare", "Compare") }}
           </button>
           <button :aria-pressed="isSaved ? 'true' : 'false'" :class="{ '-on': isSaved }" class="b-btn -line" type="button" @click="toggleSave">
-            <span :class="{ fill: isSaved }" class="ms">favorite</span>{{ isSaved ? "Saved" : "Save" }}
+            <span :class="{ fill: isSaved }" class="ms">favorite</span>{{ isSaved ? t("besti.ui.saved", "Saved") : t("besti.ui.save", "Save") }}
           </button>
         </div>
 
         <s-product-section-incentivise :variant="current_variant" :vendorProduct="selected_vendor_product"></s-product-section-incentivise>
         <s-storefront-coupons-list :product-id="$product.id" :variant-id="current_variant ? current_variant.id : undefined"></s-storefront-coupons-list>
 
-        <router-link v-if="quickBuyMode" :to="productTo" class="b-link b-buybox__full">See full details<span class="ms">chevron_right</span></router-link>
+        <router-link v-if="quickBuyMode" :to="productTo" class="b-link b-buybox__full">{{ t("besti.ui.seeFullDetails", "See full details") }}<span class="ms b-flip">chevron_right</span></router-link>
       </div>
       <p v-if="!quickBuyMode" class="b-pdp__ask">
-        <span class="ms">support_agent</span>Questions about it?
-        <router-link :to="{ name: window.$storefront.routes.SHOP_CONTACT_US }">Contact us</router-link>
+        <span class="ms">support_agent</span>{{ t("besti.ui.questionsAboutIt", "Questions about it?") }}
+        <router-link :to="{ name: window.$storefront.routes.SHOP_CONTACT_US }">{{ t("besti.ui.contactUs", "Contact us") }}</router-link>
       </p>
     </aside>
 
@@ -207,6 +207,7 @@
 
 <script>
 import { money as regionMoney } from "../../region-switcher/region";
+import { t } from "../../kalio/i18n/kalio-i18n";
 import { currentCurrency } from "../../region-switcher/region";
 import KalioProductOverview from "../../kalio/product/KalioProductOverview.vue";
 import UCountDown from "@selldone/components-vue/ui/count-down/UCountDown.vue";
@@ -243,8 +244,22 @@ export default {
       return variantDimension(this.enabledVariants);
     },
     dimWord() {
-      const w = this.dimension?.word || "Option";
-      return w[0].toUpperCase() + w.slice(1);
+      switch (this.dimension?.key) {
+        case "color":
+          return t("besti.dim.colour", "Colour");
+        case "volume":
+          return t("besti.dim.capacity", "Capacity");
+        case "weight":
+          return t("besti.dim.weight", "Weight");
+        case "pack":
+          return t("besti.dim.pack", "Pack");
+        case "type":
+          return t("besti.dim.type", "Type");
+        case "style":
+          return t("besti.dim.style", "Style");
+        default:
+          return t("besti.dim.option", "Option");
+      }
     },
     /* One dimension: a tile per variant with its own photo and price. */
     tiles() {
@@ -256,7 +271,7 @@ export default {
           v,
           img: window.CDN.GET_SHOP_IMAGE_PATH(v.image || this.$product.icon, 128),
           swatch: d.key === "color" ? swatchBg(v.color) : null,
-          label: d.key === "color" ? colourName(v.color) || "Colour" : v[d.key],
+          label: d.key === "color" ? colourName(v.color) || t("besti.dim.colour", "Colour") : v[d.key],
           price: own ? moneyOf(this.shop, this.$product, v, this.currency).now : null,
         };
       });

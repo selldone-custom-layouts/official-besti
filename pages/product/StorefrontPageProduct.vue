@@ -25,17 +25,17 @@
     <div style="order: 0">
       <div class="s--product-section-info b-wrap">
         <slot name="header" :center="true"></slot>
-        <nav aria-label="Breadcrumb" class="b-crumbs">
-          <router-link :to="{ path: '/' }">Home</router-link>
+        <nav :aria-label="t('pdp.breadcrumb', 'Breadcrumb')" class="b-crumbs">
+          <router-link :to="{ path: '/' }">{{ t("besti.crumbs.home", "Home") }}</router-link>
           <template v-if="product && product.category">
-            <span aria-hidden="true" class="ms">chevron_right</span>
+            <span aria-hidden="true" class="ms b-flip">chevron_right</span>
             <router-link
               :to="{ name: window.$storefront.routes.SHOP_CATEGORY_PAGE, params: { category_name: product.category.name } }"
               >{{ product.category.title || product.category.name }}</router-link
             >
           </template>
           <template v-if="product">
-            <span aria-hidden="true" class="ms">chevron_right</span>
+            <span aria-hidden="true" class="ms b-flip">chevron_right</span>
             <span aria-current="page" class="b-crumbs__here">{{ product.title }}</span>
           </template>
           <span class="b-crumbs__tools">
@@ -47,12 +47,12 @@
         <s-product-overview-loading v-else />
         <u-loading-progress v-if="busy"></u-loading-progress>
 
-        <nav v-if="product" aria-label="On this page" class="b-pills">
-          <a v-if="spec_groups.length" href="#b-specs" @click.prevent="jump('b-specs')">Specifications</a>
-          <a v-if="article" href="#b-about" @click.prevent="jump('b-about')">Overview</a>
-          <a href="#b-reviews" @click.prevent="jump('b-reviews')">Reviews</a>
-          <a href="#b-together" @click.prevent="jump('b-together')">Bought together</a>
-          <a href="#b-related" @click.prevent="jump('b-related')">Related</a>
+        <nav v-if="product" :aria-label="t('besti.ui.onThisPage', 'On this page')" class="b-pills">
+          <a v-if="spec_groups.length" href="#b-specs" @click.prevent="jump('b-specs')">{{ t("besti.ui.specifications", "Specifications") }}</a>
+          <a v-if="article" href="#b-about" @click.prevent="jump('b-about')">{{ t("besti.ui.overview", "Overview") }}</a>
+          <a href="#b-reviews" @click.prevent="jump('b-reviews')">{{ t("besti.ui.reviews", "Reviews") }}</a>
+          <a href="#b-together" @click.prevent="jump('b-together')">{{ t("besti.ui.boughtTogether", "Bought together") }}</a>
+          <a href="#b-related" @click.prevent="jump('b-related')">{{ t("besti.ui.related", "Related") }}</a>
         </nav>
       </div>
     </div>
@@ -65,7 +65,7 @@
       <!-- Specifications, in the shop's own groups -->
       <div :style="{ order: getOrder('spec') }">
         <section v-if="spec_groups.length" id="b-specs" aria-labelledby="b-specs-h" class="b-sec b-wrap b-specs">
-          <header class="b-head"><h2 id="b-specs-h">Specifications</h2></header>
+          <header class="b-head"><h2 id="b-specs-h">{{ t("besti.pdp.specs", "Specifications") }}</h2></header>
           <div class="b-specs__cols">
             <div v-for="(col, ci) in spec_cols" :key="ci" class="b-specs__col">
               <table v-for="g in col" :key="g.title" class="b-spec">
@@ -81,18 +81,18 @@
           </div>
         </section>
         <section v-if="article" id="b-about" aria-labelledby="b-about-h" class="b-sec b-wrap b-about">
-          <header class="b-head"><h2 id="b-about-h">Overview</h2></header>
+          <header class="b-head"><h2 id="b-about-h">{{ t("besti.pdp.overview", "Overview") }}</h2></header>
           <s-product-article class="k-prose" hide-title></s-product-article>
         </section>
         <section v-if="ways.length" class="b-sec b-wrap b-ship">
-          <header class="b-head"><h2>Delivery and returns</h2></header>
+          <header class="b-head"><h2>{{ t("besti.pdp.delivery", "Delivery and returns") }}</h2></header>
           <ul class="b-ship__ways">
             <li v-for="w in ways" :key="w.key">
               <span class="ms">{{ w.icon === "storefront" ? "storefront" : "local_shipping" }}</span>
               <span
                 ><b>{{ w.word }}</b> {{ w.line }}.
-                <template v-if="w.free">Free.</template>
-                <template v-else-if="w.freeOver">Free on orders over {{ rsMoney(w.freeOver, w.currency) }}.</template>
+                <template v-if="w.free">{{ t("besti.pdp.freeDot", "Free.") }}</template>
+                <template v-else-if="w.freeOver">{{ t("besti.pdp.freeOver", "Free on orders over {amount}.", { amount: rsMoney(w.freeOver, w.currency) }) }}</template>
               </span>
             </li>
           </ul>
@@ -117,7 +117,7 @@
       <!-- Reviews -->
       <div :style="{ order: getOrder('comments') }">
         <section id="b-reviews" aria-labelledby="b-reviews-h" class="b-sec b-wrap b-reviews k-reviews">
-          <header class="b-head"><h2 id="b-reviews-h">Reviews</h2></header>
+          <header class="b-head"><h2 id="b-reviews-h">{{ t("reviews.title", "Reviews") }}</h2></header>
           <kalio-reviews></kalio-reviews>
         </section>
       </div>
@@ -128,7 +128,7 @@
       </div>
       <div :style="{ order: getOrder('related-products') }">
         <div id="b-related">
-          <besti-rail v-if="related === null || related.length" :products="related" class="b-wrap" title="Related products" @quick-buy="quickBuy" />
+          <besti-rail v-if="related === null || related.length" :products="related" class="b-wrap" :title="t('besti.ui.relatedProducts', 'Related products')" @quick-buy="quickBuy" />
         </div>
         <besti-row
           v-if="product.category"
@@ -136,7 +136,7 @@
           :dir="product.category.name"
           :exclude="product.id"
           :more-to="{ name: window.$storefront.routes.SHOP_CATEGORY_PAGE, params: { category_name: product.category.name } }"
-          :title="'More in ' + (product.category.title || product.category.name)"
+          :title="t('besti.pdp.moreIn', 'More in {aisle}', { aisle: product.category.title || product.category.name })"
           class="b-wrap"
           lazy
           sort="bestselling"

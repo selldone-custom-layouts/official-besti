@@ -21,6 +21,8 @@
 
 declare const window: any;
 
+import { t } from "../kalio/i18n/kalio-i18n";
+
 /* ━━━━━━━━━━━━ Photos ━━━━━━━━━━━━
    import.meta.glob lists only the files that exist when the Layout is
    built, so a missing photo costs nothing and breaks nothing. */
@@ -108,6 +110,24 @@ const WAYS: { types: string[]; word: string; icon: string; line: string }[] = [
   { types: ["Airplane", "Global"], word: "Worldwide", icon: "public", line: "Shipped wherever you are" },
 ];
 
+/* A kind's words in the visitor's language (Besti 1.0.21). */
+function wayWords(kind: string): { word: string; line: string } {
+  switch (kind) {
+    case "Pickup":
+      return { word: t("besti.ways.pickup", "Pickup"), line: t("besti.ways.pickupLine", "Order online, collect at the shop") };
+    case "Delivery":
+      return { word: t("besti.ways.delivery", "Delivery"), line: t("besti.ways.deliveryLine", "A courier brings it to your door") };
+    case "Shipping":
+      return { word: t("besti.ways.shipping", "Shipping"), line: t("besti.ways.shippingLine", "Shipped to your address") };
+    case "By post":
+      return { word: t("besti.ways.post", "By post"), line: t("besti.ways.postLine", "Sent to your address by post") };
+    case "Worldwide":
+      return { word: t("besti.ways.worldwide", "Worldwide"), line: t("besti.ways.worldwideLine", "Shipped wherever you are") };
+    default:
+      return { word: t("besti.ways.delivery", "Delivery"), line: t("besti.ways.otherLine", "Brought to your address") };
+  }
+}
+
 export interface Way {
   key: string;
   word: string;
@@ -123,11 +143,12 @@ export interface Way {
 /** The shop's enabled delivery methods, one card per kind. */
 export function waysOf(shop: any): Way[] {
   const out: Way[] = [];
-  for (const t of (shop?.transportations || []).filter((t: any) => t && t.enable)) {
-    const kind = WAYS.find((w) => w.types.includes(t.type));
-    const key = kind ? kind.word : t.type;
-    const free = !!t.free_shipping && !(Number(t.free_shipping_limit) > 0);
-    const freeOver = t.free_shipping && Number(t.free_shipping_limit) > 0 ? Number(t.free_shipping_limit) : null;
+  for (const tr of (shop?.transportations || []).filter((x: any) => x && x.enable)) {
+    const kind = WAYS.find((w) => w.types.includes(tr.type));
+    const key = kind ? kind.word : tr.type;
+    const free = !!tr.free_shipping && !(Number(tr.free_shipping_limit) > 0);
+    const freeOver = tr.free_shipping && Number(tr.free_shipping_limit) > 0 ? Number(tr.free_shipping_limit) : null;
+    const words = wayWords(kind ? kind.word : "");
     const known = out.find((w) => w.key === key);
     if (known) {
       /* Two methods of one kind: the more generous free rule wins. */
@@ -137,12 +158,12 @@ export function waysOf(shop: any): Way[] {
     }
     out.push({
       key,
-      word: t.title || (kind ? kind.word : "Delivery"),
+      word: tr.title || words.word,
       icon: kind ? kind.icon : "local_shipping",
-      line: kind ? kind.line : "Brought to your address",
+      line: words.line,
       free,
       freeOver,
-      currency: t.currency || shop?.currency || null,
+      currency: tr.currency || shop?.currency || null,
     });
   }
   /* In the order shoppers expect: pickup, delivery, shipping, post. */

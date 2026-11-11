@@ -25,7 +25,7 @@
       <u-price :amount="now" :currency="currency" class="t-card__now" />
       <template v-if="was">
         <span class="t-card__was">reg <u-price :amount="was" :currency="currency" /></span>
-        <em class="t-card__sale">Sale</em>
+        <em class="t-card__sale">{{ t("besti.ui.sale", "Sale") }}</em>
       </template>
     </div>
 

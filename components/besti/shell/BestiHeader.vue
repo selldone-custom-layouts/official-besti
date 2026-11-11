@@ -29,12 +29,12 @@
     <div v-if="dotd || !products_loaded" class="b-strip">
       <template v-if="dotd">
         <span class="b-strip__deal">
-          <span class="ms fill">bolt</span><b>Deal of the Day</b>
+          <span class="ms fill">bolt</span><b>{{ t("besti.dotd.title", "Deal of the Day") }}</b>
           <em class="b-strip__t">{{ dotd.title }}, {{ money(dotdMoney.now) }}<s v-if="dotdMoney.was">{{ money(dotdMoney.was) }}</s></em>
-          <b v-if="dotdOff" class="b-strip__pct">{{ dotdOff }}% off</b>
+          <b v-if="dotdOff" class="b-strip__pct">{{ t("besti.percentOff", "{n}% off", { n: dotdOff }) }}</b>
         </span>
         <besti-deal-clock :end="dotdEnd" mode="strip" />
-        <router-link :to="productTo(dotd)" class="b-strip__go">Shop the deal<span class="ms">chevron_right</span></router-link>
+        <router-link :to="productTo(dotd)" class="b-strip__go">{{ t("besti.dotd.shop", "Shop the deal") }}<span class="ms b-flip">chevron_right</span></router-link>
       </template>
     </div>
 
@@ -44,9 +44,9 @@
 
       <form v-if="showSearch" class="b-search" role="search" @submit.prevent="submit()">
         <label class="b-search__scope">
-          <span class="k-sr">Search in</span>
-          <select v-model="scope" aria-label="Search in">
-            <option :value="null">All</option>
+          <span class="k-sr">{{ t("besti.search.in", "Search in") }}</span>
+          <select v-model="scope" :aria-label="t('besti.search.in', 'Search in')">
+            <option :value="null">{{ t("besti.search.all", "All") }}</option>
             <option v-for="c in cats" :key="c.id" :value="c.name">{{ c.title || c.name }}</option>
           </select>
           <span class="b-search__scope-t">{{ scopeTitle }}<span class="ms">expand_more</span></span>
@@ -55,10 +55,10 @@
           ref="q"
           :value="q"
           aria-autocomplete="list"
-          aria-label="Search"
+          :aria-label="t('besti.search', 'Search')"
           autocomplete="off"
           enterkeyhint="search"
-          placeholder="What can we help you find?"
+          :placeholder="t('besti.search.placeholder', 'What can we help you find?')"
           type="search"
           @blur="blurSoon"
           @focus="open_suggest = true"
@@ -67,7 +67,7 @@
           @keydown.up.prevent="move(-1)"
           @keydown.esc="open_suggest = false"
         />
-        <button aria-label="Search" class="b-search__go" type="submit"><span class="ms">search</span></button>
+        <button :aria-label="t('besti.search', 'Search')" class="b-search__go" type="submit"><span class="ms">search</span></button>
 
         <div v-if="open_suggest && (hits.length || catHits.length)" class="b-suggest" role="listbox">
           <router-link
@@ -79,7 +79,7 @@
             @mousedown.prevent
             @click="open_suggest = false"
           >
-            <span class="ms">category</span>{{ c.title || c.name }}<small>Department</small>
+            <span class="ms">category</span>{{ c.title || c.name }}<small>{{ t("besti.search.department", "Department") }}</small>
           </router-link>
           <router-link
             v-for="(p, i) in hits"
@@ -96,55 +96,55 @@
             <u-price :amount="price(p).now" :currency="currency" />
           </router-link>
           <button class="b-suggest__all" type="button" @mousedown.prevent @click="submit()">
-            See all results for “{{ q }}”<span class="ms">arrow_forward</span>
+            {{ t("besti.search.seeAll", "See all results for “{query}”", { query: q }) }}<span class="ms b-flip">arrow_forward</span>
           </button>
         </div>
       </form>
       <span v-else class="b-header__sp"></span>
 
-      <nav aria-label="Your account" class="b-acts">
+      <nav :aria-label="t('besti.header.yourAccount', 'Your account')" class="b-acts">
         <region-switcher-button v-if="!compact" button-class="b-region" />
-        <router-link :to="ordersTo" class="b-act -track"><span class="ms">local_shipping</span><span class="b-act__t">{{ t("header.track") }}</span></router-link>
+        <router-link :to="ordersTo" class="b-act -track"><span class="ms">local_shipping</span><span class="b-act__t">{{ t("besti.header.track", "Track order") }}</span></router-link>
         <component :is="user ? 'router-link' : 'button'" :to="user ? savedTo : undefined" :type="user ? undefined : 'button'" class="b-act -saved" @click="!user && signIn()">
-          <span class="ms">favorite</span><span class="b-act__t">{{ t("header.saved") }}</span>
+          <span class="ms">favorite</span><span class="b-act__t">{{ t("besti.header.saved", "Saved") }}</span>
         </component>
         <router-link v-if="user" :to="accountTo" class="b-act -me">
           <span class="ms">person</span><span class="b-act__t">{{ firstName }}</span>
         </router-link>
-        <button v-else-if="!busyUser" class="b-act -me" type="button" @click="signIn"><span class="ms">person</span><span class="b-act__t">{{ t("header.signIn") }}</span></button>
-        <span v-else class="b-act -me -wait"><span class="ms">person</span><span class="b-act__t">{{ t("header.account") }}</span></span>
+        <button v-else-if="!busyUser" class="b-act -me" type="button" @click="signIn"><span class="ms">person</span><span class="b-act__t">{{ t("besti.header.signIn", "Sign in") }}</span></button>
+        <span v-else class="b-act -me -wait"><span class="ms">person</span><span class="b-act__t">{{ t("besti.header.account", "Account") }}</span></span>
 
-        <button :aria-label="`Cart, ${units} items`" class="b-cartpill" type="button" @click="cart = true">
+        <button :aria-label="t('besti.header.cartAria', { one: 'Cart, {n} item', other: 'Cart, {n} items' }, { n: units })" class="b-cartpill" type="button" @click="cart = true">
           <span class="ms fill">shopping_cart</span>
           <i v-if="units">{{ units }}</i>
-          <span class="b-cartpill__t"><template v-if="units">{{ cartMoney }}</template><template v-else>{{ t("header.cart") }}</template></span>
+          <span class="b-cartpill__t"><template v-if="units">{{ cartMoney }}</template><template v-else>{{ t("besti.header.cart", "Cart") }}</template></span>
         </button>
       </nav>
     </div>
 
     <!-- ▆▆▆▆ 3. Departments ▆▆▆▆ -->
-    <nav aria-label="Departments" class="b-dept">
+    <nav :aria-label="t('besti.departments', 'Departments')" class="b-dept">
       <div ref="deptRow" class="b-dept__in">
         <button :aria-expanded="mega ? 'true' : 'false'" class="b-dept__all" type="button" @click="toggleMega">
-          <span class="ms">{{ mega ? "close" : "menu" }}</span>{{ t("header.allDepartments") }}
+          <span class="ms">{{ mega ? "close" : "menu" }}</span>{{ t("besti.header.allDepartments", "All departments") }}
         </button>
         <router-link v-for="c in barCats" :key="c.id" :class="{ '-on': $route.params.category_name === c.name }" :to="catTo(c)" class="b-dept__a">
           {{ c.title || c.name }}
         </router-link>
         <v-menu v-if="moreCats.length && !compact" location="bottom start" offset="0">
           <template v-slot:activator="{ props, isActive }">
-            <button class="b-dept__a -more" type="button" v-bind="props">More<span :class="{ '-up': isActive }" class="ms">expand_more</span></button>
+            <button class="b-dept__a -more" type="button" v-bind="props">{{ t("besti.header.more", "More") }}<span :class="{ '-up': isActive }" class="ms">expand_more</span></button>
           </template>
           <div class="b-menu">
             <router-link v-for="c in moreCats" :key="c.id" :to="catTo(c)">{{ c.title || c.name }}</router-link>
           </div>
         </v-menu>
         <span class="b-dept__sp"></span>
-        <router-link :to="dealsTo" class="b-dept__a -deals"><span class="ms fill">sell</span>{{ t("header.deals") }}</router-link>
-        <router-link :to="newTo" class="b-dept__a">{{ t("header.new") }}</router-link>
+        <router-link :to="dealsTo" class="b-dept__a -deals"><span class="ms fill">sell</span>{{ t("besti.header.deals", "Deals") }}</router-link>
+        <router-link :to="newTo" class="b-dept__a">{{ t("besti.header.new", "New arrivals") }}</router-link>
         <v-menu v-if="brands.length && !compact" location="bottom end" offset="0">
           <template v-slot:activator="{ props, isActive }">
-            <button class="b-dept__a" type="button" v-bind="props">Brands<span :class="{ '-up': isActive }" class="ms">expand_more</span></button>
+            <button class="b-dept__a" type="button" v-bind="props">{{ t("besti.header.brands", "Brands") }}<span :class="{ '-up': isActive }" class="ms">expand_more</span></button>
           </template>
           <div class="b-menu -brands">
             <router-link v-for="b in brands" :key="b" :to="brandTo(b)">{{ b }}</router-link>
@@ -187,14 +187,14 @@
               @click="megaMore = !megaMore"
             >
               <span aria-hidden="true" class="b-mega__ic -more"><span class="ms">expand_more</span></span>
-              <span>{{ megaMore ? t("menu.showFewer") : t("menu.showMore", { n: megaRest.length }) }}</span>
+              <span>{{ megaMore ? t("besti.menu.showFewer", "Show fewer") : t("besti.menu.showMore", "Show {n} more", { n: megaRest.length }) }}</span>
             </button>
           </div>
           <div class="b-mega__side">
-            <router-link :to="dealsTo"><span class="ms fill">sell</span>{{ t("menu.todaysDeals") }}</router-link>
-            <router-link :to="newTo"><span class="ms">new_releases</span>{{ t("header.new") }}</router-link>
-            <router-link :to="allTo"><span class="ms">grid_view</span>{{ t("menu.allProducts") }}</router-link>
-            <router-link :to="ordersTo"><span class="ms">local_shipping</span>{{ t("menu.trackOrder") }}</router-link>
+            <router-link :to="dealsTo"><span class="ms fill">sell</span>{{ t("besti.menu.todaysDeals", "Today’s deals") }}</router-link>
+            <router-link :to="newTo"><span class="ms">new_releases</span>{{ t("besti.header.new", "New arrivals") }}</router-link>
+            <router-link :to="allTo"><span class="ms">grid_view</span>{{ t("besti.menu.allProducts", "All products") }}</router-link>
+            <router-link :to="ordersTo"><span class="ms">local_shipping</span>{{ t("besti.menu.trackOrder", "Track an order") }}</router-link>
             <!-- Phone and tablet: language and currency (the desktop has the header pill). -->
             <region-sheet v-if="compact" keep-menu row-class="b-mega__region" />
           </div>
@@ -212,15 +212,15 @@
         temporary
       >
         <div class="k-drawer__head">
-          <p class="k-drawer__title">Your cart<small v-if="units">{{ units }} {{ units === 1 ? "item" : "items" }}</small></p>
-          <button aria-label="Close" class="b-x" type="button" @click="cart = false"><span class="ms">close</span></button>
+          <p class="k-drawer__title">{{ t("besti.cart.title", "Your cart") }}<small v-if="units">{{ t("besti.cart.items", { one: "{n} item", other: "{n} items" }, { n: units }) }}</small></p>
+          <button :aria-label="t('besti.close', 'Close')" class="b-x" type="button" @click="cart = false"><span class="ms">close</span></button>
         </div>
         <div v-if="!units" class="b-empty -drawer">
           <span aria-hidden="true" class="b-empty__ic"><span class="ms">shopping_cart</span></span>
-          <p class="b-empty__t">Your cart is empty</p>
-          <p class="b-empty__p">Find something you love and it will wait for you here.</p>
-          <router-link :to="dealsTo" class="b-btn" @click="cart = false">Shop today’s deals</router-link>
-          <router-link :to="allTo" class="b-btn -line" @click="cart = false">Continue shopping</router-link>
+          <p class="b-empty__t">{{ t("besti.cart.empty.title", "Your cart is empty") }}</p>
+          <p class="b-empty__p">{{ t("besti.cart.empty.text", "Find something you love and it will wait for you here.") }}</p>
+          <router-link :to="dealsTo" class="b-btn" @click="cart = false">{{ t("besti.cart.empty.deals", "Shop today’s deals") }}</router-link>
+          <router-link :to="allTo" class="b-btn -line" @click="cart = false">{{ t("besti.cart.empty.continue", "Continue shopping") }}</router-link>
         </div>
         <kalio-basket-drawer v-else @close="cart = false" />
       </v-navigation-drawer>
@@ -229,7 +229,8 @@
 </template>
 
 <script>
-import { convert, currentCurrency, formatMoney, t } from "../../region-switcher/region";
+import { convert, currentCurrency, formatMoney } from "../../region-switcher/region";
+import { t } from "../../kalio/i18n/kalio-i18n";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import { EventBus } from "@selldone/components-vue/utils/events/EventBus.ts";
 import BestiLogo from "../BestiLogo.vue";
@@ -276,7 +277,7 @@ export default {
       return this.$store.getters.getBusyUser;
     },
     firstName() {
-      return String(this.user?.name || "Account").split(/\s+/)[0].slice(0, 14);
+      return String(this.user?.name || t("besti.header.account", "Account")).split(/\s+/)[0].slice(0, 14);
     },
     compact() {
       return this.windowWidth < 900;
@@ -375,7 +376,7 @@ export default {
     },
     scopeTitle() {
       const c = this.cats.find((x) => x.name === this.scope);
-      return c ? c.title || c.name : "All";
+      return c ? c.title || c.name : t("besti.search.all", "All");
     },
     catHits() {
       const q = this.q.trim().toLowerCase();

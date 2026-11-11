@@ -15,7 +15,7 @@ import { currentCurrency } from "../region-switcher/region";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import { percentOff } from "../kalio/kalio-catalog";
 import { addVariant, basketLine, hasSizes, pendingLine, pendingLineFor, quickAdd, settling, shownCount, stepTo } from "../kalio/kalio-basket";
-import { catalogueById, colourName, dealEnd, moneyOf, moneyText, saved, swatchBg, toggleSaved, variantDimension } from "./besti";
+import { catalogueById, chooseLabel, colourName, dealEnd, moneyOf, moneyText, saved, swatchBg, toggleSaved, variantDimension } from "./besti";
 
 declare const window: any;
 
@@ -116,6 +116,7 @@ export default {
   methods: {
     swatchBg,
     colourName,
+    chooseLabel,
     moneyWhole(this: any, n: number) {
       return moneyText(n, this.currency, Math.round(n) === n);
     },

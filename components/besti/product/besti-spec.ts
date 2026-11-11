@@ -1,3 +1,4 @@
+import { t } from "../../kalio/i18n/kalio-i18n";
 /*
  * Besti — a product's specifications, read from Selldone's flat spec:
  * { "Design": "group", "Form Factor": ["Laptop", "Convertible"], … } in the
@@ -33,7 +34,7 @@ export function specGroups(product: any): SpecGroup[] {
   const seen = new Set<string>();
   const keys = [...order, ...Object.keys(spec)].filter((k) => k !== "spec_order" && !seen.has(k) && seen.add(k));
   const out: SpecGroup[] = [];
-  let group: SpecGroup = { title: "General", rows: [] };
+  let group: SpecGroup = { title: t("besti.spec.general", "General"), rows: [] };
   for (const key of keys) {
     const value = spec[key];
     if (value === "group") {

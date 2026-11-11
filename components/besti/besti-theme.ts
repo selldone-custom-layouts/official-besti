@@ -20,6 +20,7 @@
  * #151c2b; each dark "text" colour on that card 7.97 or more.
  */
 import type { ThemeSwitcherConfig } from "../theme-switcher/theme-switcher";
+import { t } from "../kalio/i18n/kalio-i18n";
 import { THEME_SETTINGS } from "./besti-theme.settings";
 
 /* A dark band of a colour's hue (the deal strip, the footer): the colour
@@ -48,31 +49,41 @@ export const BESTI_THEME: ThemeSwitcherConfig = {
   palettes: [
     {
       id: "blue",
-      name: "Besti blue",
+      get name() {
+        return t("besti.palette.blue", "Besti blue");
+      },
       light: { primary: "#0a4bd8", deep: "#0838a8", soft: "#e8efff", onPrimary: "#ffffff", text: "#0a4bd8", navy: "#071634", navy2: "#0e2350", pop: "#ffd91a" },
       dark: { primary: "#2563eb", deep: "#1d4ed8", soft: "#18294f", onPrimary: "#ffffff", text: "#8fb0ff" },
     },
     {
       id: "violet",
-      name: "Violet",
+      get name() {
+        return t("besti.palette.violet", "Violet");
+      },
       light: { primary: "#6d28d9", deep: "#5b21b6", soft: "#f1ebfe", onPrimary: "#ffffff", text: "#6d28d9", navy: "#1c0f3a", navy2: "#2a1856", pop: "#ffd91a" },
       dark: { primary: "#8042f0", deep: "#6d28d9", soft: "#2a1a4d", onPrimary: "#ffffff", text: "#c4a8ff" },
     },
     {
       id: "emerald",
-      name: "Emerald",
+      get name() {
+        return t("besti.palette.emerald", "Emerald");
+      },
       light: { primary: "#03694c", deep: "#04543d", soft: "#e3f6ee", onPrimary: "#ffffff", text: "#03694c", navy: "#062a20", navy2: "#0b3d2f", pop: "#ffd91a" },
       dark: { primary: "#047857", deep: "#065f46", soft: "#0f3a2e", onPrimary: "#ffffff", text: "#5fd3a5" },
     },
     {
       id: "copper",
-      name: "Copper",
+      get name() {
+        return t("besti.palette.copper", "Copper");
+      },
       light: { primary: "#9a4207", deep: "#7c3506", soft: "#fdf0e3", onPrimary: "#ffffff", text: "#9a4207", navy: "#2a1607", navy2: "#3d220d", pop: "#ffd91a" },
       dark: { primary: "#b45309", deep: "#92400e", soft: "#3d2410", onPrimary: "#ffffff", text: "#f5b36b" },
     },
     {
       id: "magenta",
-      name: "Magenta",
+      get name() {
+        return t("besti.palette.magenta", "Magenta");
+      },
       light: { primary: "#a21caf", deep: "#86198f", soft: "#fbe9fc", onPrimary: "#ffffff", text: "#a21caf", navy: "#2a0b2e", navy2: "#3d1243", pop: "#ffd91a" },
       dark: { primary: "#b521c6", deep: "#a21caf", soft: "#3d1342", onPrimary: "#ffffff", text: "#f0a6f7" },
     },
@@ -153,7 +164,36 @@ export const BESTI_THEME: ThemeSwitcherConfig = {
 
   metaThemeColor: "light.primary",
   ui: { ink: "var(--b-ink)", muted: "var(--b-muted)", line: "var(--b-line)", surface: "var(--b-surface)", font: '"Archivo", system-ui, sans-serif' },
-  labels: { theme: "Theme", palettes: "Colour", mode: "Light or dark", modeTitle: "Mode", light: "Light", dark: "Dark", custom: "Custom colour", adjusted: "Adjusted for readability", brand: "Brand colour" },
+  /* Getters: the words follow the visitor's language (Besti 1.0.21). */
+  labels: {
+    get theme() {
+      return t("theme.title", "Theme");
+    },
+    get palettes() {
+      return t("theme.palettes", "Colour");
+    },
+    get mode() {
+      return t("theme.mode", "Light or dark");
+    },
+    get modeTitle() {
+      return t("theme.modeTitle", "Mode");
+    },
+    get light() {
+      return t("theme.light", "Light");
+    },
+    get dark() {
+      return t("theme.dark", "Dark");
+    },
+    get custom() {
+      return t("theme.custom", "Custom colour");
+    },
+    get adjusted() {
+      return t("theme.adjusted", "Adjusted for readability");
+    },
+    get brand() {
+      return t("theme.brand", "Brand colour");
+    },
+  },
 
   /* "Custom colour" (the owner, 9 November 2026): any colour, made readable by
      paletteFromColor(). The department bar carries white words and the yellow

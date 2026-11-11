@@ -25,14 +25,14 @@
         loading="lazy"
         @error="dropSrcset"
       />
-      <span v-if="off > 0" class="b-flag">{{ off }}% off</span>
+      <span v-if="off > 0" class="b-flag">{{ t("besti.percentOff", "{n}% off", { n: off }) }}</span>
       <span v-if="rank" class="b-rank">{{ rank }}</span>
     </component>
 
     <div class="b-card__body">
       <span v-if="big && product.brand" class="b-brand">{{ product.brand }}</span>
 
-      <div v-if="colours.length" :aria-label="`Colour of ${product.title}`" class="b-swrow" role="radiogroup">
+      <div v-if="colours.length" :aria-label="t('besti.card.colourOf', 'Colour of {name}', { name: product.title })" class="b-swrow" role="radiogroup">
         <button
           v-for="(v, i) in colours.slice(0, maxSwatches)"
           :key="i"
@@ -62,37 +62,37 @@
 
       <div class="b-price">
         <u-price :amount="money.now" :currency="currency" class="b-price__now" />
-        <span v-if="money.save > 0" class="b-save">Save {{ moneyWhole(money.save) }}</span>
+        <span v-if="money.save > 0" class="b-save">{{ t("besti.card.save", "Save {amount}", { amount: moneyWhole(money.save) }) }}</span>
       </div>
       <div class="b-was">
-        <template v-if="money.was">Was <s><u-price :amount="money.was" :currency="currency" /></s></template>
+        <template v-if="money.was">{{ t("besti.ui.was", "Was") }} <s><u-price :amount="money.was" :currency="currency" /></s></template>
       </div>
       <!-- The deal's clock; its line is kept on every card so a row stays level. -->
       <div class="b-card__cd"><besti-deal-clock :end="dealEndsAt" mode="line" /></div>
 
       <div class="b-card__buy" @click.prevent.stop>
-        <div v-if="shown > 0" :class="{ '-busy': busy }" aria-label="Quantity in cart" class="b-step" role="group">
-          <button :aria-label="shown > 1 ? 'One fewer' : 'Remove from cart'" type="button" @click.prevent.stop="step(-1)">
+        <div v-if="shown > 0" :class="{ '-busy': busy }" :aria-label="t('besti.ui.quantityInCart', 'Quantity in cart')" class="b-step" role="group">
+          <button :aria-label="shown > 1 ? t('besti.ui.oneFewer', 'One fewer') : t('besti.ui.removeFromCart', 'Remove from cart')" type="button" @click.prevent.stop="step(-1)">
             <span class="ms">{{ shown > 1 ? "remove" : "delete" }}</span>
           </button>
-          <output aria-live="polite"><b>{{ shown }}</b><small> in cart</small></output>
-          <button aria-label="One more" type="button" @click.prevent.stop="step(1)"><span class="ms">add</span></button>
+          <output aria-live="polite"><b>{{ shown }}</b><small> {{ t("besti.ui.inCart", "in cart") }}</small></output>
+          <button :aria-label="t('besti.ui.oneMore', 'One more')" type="button" @click.prevent.stop="step(1)"><span class="ms">add</span></button>
         </div>
-        <button v-else-if="soldOut" class="b-btn -block -off" disabled type="button">Out of stock</button>
+        <button v-else-if="soldOut" class="b-btn -block -off" disabled type="button">{{ t("besti.ui.outOfStock", "Out of stock") }}</button>
         <button v-else-if="choose" class="b-btn -block" type="button" @click.prevent.stop="$emit('quick-buy', product)">
-          <span class="ms">tune</span><span class="b-long">Choose {{ dimension.word }}</span><span class="b-short">Choose</span>
+          <span class="ms">tune</span><span class="b-long">{{ chooseLabel(dimension) }}</span><span class="b-short">{{ t("besti.ui.choose", "Choose") }}</span>
         </button>
         <button v-else class="b-btn -block" type="button" @click.prevent.stop="add">
-          <span class="ms">add_shopping_cart</span><span class="b-long">Add to cart</span><span class="b-short">Add</span>
+          <span class="ms">add_shopping_cart</span><span class="b-long">{{ t("besti.ui.addToCart", "Add to cart") }}</span><span class="b-short">{{ t("besti.ui.add", "Add") }}</span>
         </button>
       </div>
 
       <div class="b-card__foot" @click.prevent.stop>
         <button :aria-pressed="comparing ? 'true' : 'false'" :class="{ '-on': comparing }" class="b-cmp" type="button" @click.prevent.stop="toggleCompare">
-          <i><span class="ms">check</span></i>Compare
+          <i><span class="ms">check</span></i>{{ t("besti.ui.compare", "Compare") }}
         </button>
         <button :aria-pressed="isSaved ? 'true' : 'false'" :class="{ '-on': isSaved }" class="b-heart" type="button" @click.prevent.stop="toggleSave">
-          <span :class="{ fill: isSaved }" class="ms">favorite</span>{{ isSaved ? "Saved" : "Save" }}
+          <span :class="{ fill: isSaved }" class="ms">favorite</span>{{ isSaved ? t("besti.ui.saved", "Saved") : t("besti.ui.save", "Save") }}
         </button>
       </div>
     </div>

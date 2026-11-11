@@ -33,11 +33,11 @@
   <div class="w-mag k-wrap">
     <section class="w-mag__ed">
       <div>
-        <p class="w-mag__eyebrow">About {{ shopTitle }}</p>
-        <h1>{{ missing || busy ? sample.title : `About ${shopTitle}` }}</h1>
+        <p class="w-mag__eyebrow">{{ t("about.title", "About {shop}", { shop: shopTitle }) }}</p>
+        <h1>{{ missing || busy ? sample.title : t("about.title", "About {shop}", { shop: shopTitle }) }}</h1>
         <div v-if="busy" aria-hidden="true" class="k-legal__loading"><span></span><span></span><span></span></div>
         <template v-else-if="missing">
-          <kalio-sample-note>This text is general copy written to show the page. It is not {{ shopTitle }}'s real story.</kalio-sample-note>
+          <kalio-sample-note>{{ t("besti.about.sampleNote", "This text is general copy written to show the page. It is not {shop}'s real story.", { shop: shopTitle }) }}</kalio-sample-note>
           <p class="w-mag__lead">{{ sample.lead }}</p>
           <p>{{ sample.text[0] }}</p>
           <p class="w-mag__sign">{{ sample.sign }}</p>
@@ -50,7 +50,7 @@
     </section>
 
     <section class="t-sec">
-      <header class="t-sec__head"><h2 class="t-sec__title">How an order works</h2></header>
+      <header class="t-sec__head"><h2 class="t-sec__title">{{ t("besti.ui.howAnOrderWorks", "How an order works") }}</h2></header>
       <ol class="w-mag__how">
         <li v-for="(st, i) in how" :key="st.t">
           <i>{{ i + 1 }}</i>
@@ -72,16 +72,15 @@
 
     <section id="contact" class="t-sec w-mag__contact">
       <div>
-        <p class="w-mag__eyebrow">Contact us</p>
-        <h2>Still need us?</h2>
+        <p class="w-mag__eyebrow">{{ t("besti.contactUs", "Contact us") }}</p>
+        <h2>{{ t("besti.about.stillNeed", "Still need us?") }}</h2>
         <p>
-          For an order, the fastest way is the message thread on the order page: it comes straight to our team. For
-          anything else, write to us.
+          {{ t("besti.about.contactText", "For an order, the fastest way is the message thread on the order page: it comes straight to our team. For anything else, write to us.") }}
         </p>
       </div>
       <div class="w-mag__acts">
-        <router-link :to="{ name: window.$storefront.routes.SHOP_CONTACT_US }" class="t-btn -main">Write to us</router-link>
-        <router-link :to="catalogueRoute" class="t-btn -line">Start shopping</router-link>
+        <router-link :to="{ name: window.$storefront.routes.SHOP_CONTACT_US }" class="t-btn -main">{{ t("besti.ui.writeToUs", "Write to us") }}</router-link>
+        <router-link :to="catalogueRoute" class="t-btn -line">{{ t("besti.ui.startShopping", "Start shopping") }}</router-link>
       </div>
     </section>
   </div>
@@ -93,6 +92,7 @@ import { aboutSample, plainText } from "@app-storefront/components/kalio/pages/k
 import { aisles, catalogueRoute, countProducts, productImage, vendors } from "@app-storefront/components/kalio/kalio-catalog";
 import { waysOf } from "@app-storefront/components/walio/walio-home";
 import { photoOf, withPhoto } from "@app-storefront/components/besti/besti";
+import { t } from "@app-storefront/components/kalio/i18n/kalio-i18n";
 
 export default {
   name: "StorefrontPageOfficialAboutUs",
@@ -112,7 +112,7 @@ export default {
 
   computed: {
     shopTitle() {
-      return this.$shop?.title || "This shop";
+      return this.$shop?.title || t("sample.thisShop", "This shop");
     },
     photos() {
       /* Besti: three of the owner's portrait photos, by department. */
@@ -140,12 +140,13 @@ export default {
     aisleLine() {
       const names = this.aisleList.map((it) => it.title || it.name);
       if (names.length <= 3) return names.join(", ");
-      return `${names.length}: ${names.slice(0, 3).join(", ")} and ${names.length - 3} more`;
+      const shown = names.slice(0, 3).join(", ");
+      return t("about.facts.aisleLine", { one: "{count}: {names} and {n} more", other: "{count}: {names} and {n} more" }, { count: names.length, names: shown, n: names.length - 3 });
     },
   },
 
   created() {
-    this.setPageTitle?.("About us");
+    this.setPageTitle?.(t("about.pageTitle", "About us"));
 
     window.axios
       .get(window.XAPI.GET_SHOP_PROFILE(this.$shop.name, "about-us"))

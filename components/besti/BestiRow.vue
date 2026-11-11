@@ -27,7 +27,7 @@ export default {
     dir: { type: String, default: null },
     limit: { type: Number, default: 12 },
     moreTo: { type: Object, default: null },
-    moreLabel: { type: String, default: "See all" },
+    moreLabel: { type: String, default: "" },
     lazy: Boolean,
     spread: Boolean,
     exclude: { type: [Number, String, Array], default: null },

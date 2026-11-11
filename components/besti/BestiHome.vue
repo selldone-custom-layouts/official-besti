@@ -19,7 +19,7 @@
     <!-- ▆▆▆▆ Hero ▆▆▆▆ -->
     <section v-if="slides.length || !ready" ref="hero" class="b-hero b-wrap" @mouseenter="pause = true" @mouseleave="pause = false">
       <div v-if="!slides.length" class="b-hero__main -skeleton"></div>
-      <div v-else :aria-label="`${slide.title || slide.name} deals`" aria-roledescription="slide" class="b-hero__main" role="group">
+      <div v-else :aria-label="t('besti.home.hero.deals', '{name} deals', { name: slide.title || slide.name })" aria-roledescription="slide" class="b-hero__main" role="group">
         <!-- The photo and its words change together (a slide caught between
              its old photo and its new words read wrong on a phone). -->
         <transition mode="out-in" name="b-fade">
@@ -34,14 +34,14 @@
             />
             <div class="b-hero__card">
               <small>{{ line(slide) }}</small>
-              <h1>{{ slide.title || slide.name }} deals</h1>
+              <h1>{{ t("besti.home.hero.deals", "{name} deals", { name: slide.title || slide.name }) }}</h1>
               <p v-if="slide.description">{{ slide.description }}</p>
               <div class="b-hero__row">
-                <router-link :to="catTo(slide)" class="b-btn">Shop now</router-link>
+                <router-link :to="catTo(slide)" class="b-btn">{{ t("besti.ui.shopNow", "Shop now") }}</router-link>
                 <template v-if="slides.length > 1">
                   <span class="b-hero__count">{{ at + 1 }} / {{ slides.length }}</span>
-                  <button aria-label="Previous slide" class="b-round" type="button" @click="go(-1)"><span class="ms">chevron_left</span></button>
-                  <button aria-label="Next slide" class="b-round" type="button" @click="go(1)"><span class="ms">chevron_right</span></button>
+                  <button :aria-label="t('besti.ui.previousSlide', 'Previous slide')" class="b-round" type="button" @click="go(-1)"><span class="ms b-flip">chevron_left</span></button>
+                  <button :aria-label="t('besti.ui.nextSlide', 'Next slide')" class="b-round" type="button" @click="go(1)"><span class="ms b-flip">chevron_right</span></button>
                 </template>
               </div>
             </div>
@@ -53,14 +53,14 @@
         <span>
           <b>{{ c.title || c.name }}</b>
           <small>{{ line(c) }}</small>
-          <em>Shop<span class="ms">arrow_forward</span></em>
+          <em>{{ t("besti.ui.shop", "Shop") }}<span class="ms b-flip">arrow_forward</span></em>
         </span>
       </router-link>
     </section>
 
     <!-- ▆▆▆▆ Shop by department: two even rows ▆▆▆▆ -->
     <section v-if="tiles.cats.length" class="b-sec b-wrap">
-      <header class="b-head"><h2>Shop by department</h2></header>
+      <header class="b-head"><h2>{{ t("besti.ui.shopByDepartment", "Shop by department") }}</h2></header>
       <div :style="{ '--cols': tiles.cols }" class="b-depts">
         <router-link v-for="c in tiles.cats" :key="c.id" :to="catTo(c)" class="b-dtile">
           <span><img v-if="c.icon" :src="catIcon(c)" alt="" loading="lazy" /><span v-else class="ms">category</span></span>
@@ -68,7 +68,7 @@
         </router-link>
         <router-link v-if="tiles.all" :to="allTo" class="b-dtile -all">
           <span><span class="ms">grid_view</span></span>
-          <b>All departments</b>
+          <b>{{ t("besti.ui.allDepartments", "All departments") }}</b>
         </router-link>
       </div>
     </section>
@@ -79,9 +79,9 @@
     <!-- ▆▆▆▆ Top deals, by category ▆▆▆▆ -->
     <section v-if="topDeals.length" class="b-sec b-wrap">
       <header class="b-head">
-        <h2>Top deals</h2>
+        <h2>{{ t("besti.ui.topDeals", "Top deals") }}</h2>
         <div class="b-tabs" role="tablist">
-          <button :aria-selected="!tab" :class="{ '-on': !tab }" role="tab" type="button" @click="tab = null">All</button>
+          <button :aria-selected="!tab" :class="{ '-on': !tab }" role="tab" type="button" @click="tab = null">{{ t("besti.ui.all", "All") }}</button>
           <button
             v-for="c in dealTabs"
             :key="c.id"
@@ -94,7 +94,7 @@
             {{ c.title || c.name }}
           </button>
         </div>
-        <router-link :to="dealsTo" class="b-more">See all deals<span class="ms">chevron_right</span></router-link>
+        <router-link :to="dealsTo" class="b-more">{{ t("besti.ui.seeAllDeals", "See all deals") }}<span class="ms b-flip">chevron_right</span></router-link>
       </header>
       <div :class="'-n' + topDeals.length" class="b-grid">
         <besti-card v-for="p in topDeals" :key="p.id" :product="p" @quick-buy="quickBuy" />
@@ -103,7 +103,7 @@
 
     <!-- ▆▆▆▆ Everyday essentials: one big photo and four ▆▆▆▆ -->
     <section v-if="mosaic.length === 5" class="b-sec b-wrap">
-      <header class="b-head"><h2>Everyday essentials</h2></header>
+      <header class="b-head"><h2>{{ t("besti.ui.everydayEssentials", "Everyday essentials") }}</h2></header>
       <div class="b-mosaic">
         <router-link v-for="(c, i) in mosaic" :key="c.id" :class="'-m' + i" :to="catTo(c)" class="b-mo">
           <besti-photo :photo="photoOf(c, 'square')" :products="inCategory(c).slice(0, 4)" :sizes="i ? '(max-width: 900px) 50vw, 330px' : '(max-width: 900px) 100vw, 680px'" />
@@ -115,11 +115,11 @@
     <!-- ▆▆▆▆ Best sellers (the shop's best-seller tag) ▆▆▆▆ -->
     <section v-if="bento.big" class="b-sec b-wrap">
       <header class="b-head">
-        <h2>Best sellers</h2>
-        <router-link v-if="bento.tag" :to="tagTo(bento.tag)" class="b-more">See all<span class="ms">chevron_right</span></router-link>
+        <h2>{{ t("besti.ui.bestSellers", "Best sellers") }}</h2>
+        <router-link v-if="bento.tag" :to="tagTo(bento.tag)" class="b-more">{{ t("besti.ui.seeAll", "See all") }}<span class="ms b-flip">chevron_right</span></router-link>
       </header>
       <div :style="{ '--cols': bento.cols }" class="b-bento">
-        <besti-card :product="bento.big" big class="b-bento__big" rank="Best seller" @quick-buy="quickBuy" />
+        <besti-card :product="bento.big" big class="b-bento__big" :rank="t('besti.ui.bestSeller', 'Best seller')" @quick-buy="quickBuy" />
         <besti-card v-for="p in bento.rest" :key="p.id" :product="p" @quick-buy="quickBuy" />
       </div>
     </section>
@@ -141,14 +141,14 @@
     </section>
 
     <!-- ▆▆▆▆ New arrivals ▆▆▆▆ -->
-    <besti-rail :more-to="newTo" :products="newest" class="b-wrap" title="New arrivals" @quick-buy="quickBuy" />
+    <besti-rail :more-to="newTo" :products="newest" class="b-wrap" :title="t('besti.ui.newArrivals', 'New arrivals')" @quick-buy="quickBuy" />
 
     <!-- ▆▆▆▆ Shop by brand: one row, See all opens the rest ▆▆▆▆ -->
     <section v-if="brands.length" class="b-sec b-wrap">
       <header class="b-head">
-        <h2>Shop by brand</h2>
+        <h2>{{ t("besti.ui.shopByBrand", "Shop by brand") }}</h2>
         <button v-if="brands.length > brandRow" class="b-more" type="button" @click="all_brands = !all_brands">
-          {{ all_brands ? "Show fewer" : "See all brands" }}<span class="ms">{{ all_brands ? "expand_less" : "chevron_right" }}</span>
+          {{ all_brands ? t("besti.menu.showFewer", "Show fewer") : t("besti.home.allBrands", "See all brands") }}<span class="ms b-flip">{{ all_brands ? "expand_less" : "chevron_right" }}</span>
         </button>
       </header>
       <div :style="{ '--cols': Math.min(brandRow, brands.length) }" class="b-brands">
@@ -158,11 +158,11 @@
 
     <!-- ▆▆▆▆ A row for every other tag in use ("<Tag> Items") ▆▆▆▆ -->
     <besti-rail
-      v-for="t in tagRows"
-      :key="t.tag"
-      :more-to="tagTo(t.tag)"
-      :products="t.products"
-      :title="`${tagTitle(t.tag)} Items`"
+      v-for="row in tagRows"
+      :key="row.tag"
+      :more-to="tagTo(row.tag)"
+      :products="row.products"
+      :title="t('besti.home.tagItems', '{tag} Items', { tag: tagTitle(row.tag) })"
       class="b-wrap"
       @quick-buy="quickBuy"
     />
@@ -170,8 +170,8 @@
     <!-- ▆▆▆▆ Recently viewed (this browser) ▆▆▆▆ -->
     <section v-if="recent.length" class="b-sec b-wrap">
       <header class="b-head">
-        <h2>Recently viewed</h2>
-        <button class="b-more" type="button" @click="clearRecent">Clear</button>
+        <h2>{{ t("besti.ui.recentlyViewed", "Recently viewed") }}</h2>
+        <button class="b-more" type="button" @click="clearRecent">{{ t("besti.ui.clear", "Clear") }}</button>
       </header>
       <div class="b-recent">
         <router-link v-for="p in recent" :key="p.id" :to="productTo(p)" class="b-mini -box">
@@ -184,8 +184,8 @@
     <!-- ▆▆▆▆ Tips and guides: the four newest articles, last ▆▆▆▆ -->
     <section v-if="posts.length" class="b-sec b-wrap">
       <header class="b-head">
-        <h2>Tips and guides</h2>
-        <router-link :to="blogTo" class="b-more">All articles<span class="ms">chevron_right</span></router-link>
+        <h2>{{ t("besti.ui.tipsAndGuides", "Tips and guides") }}</h2>
+        <router-link :to="blogTo" class="b-more">{{ t("besti.ui.allArticles", "All articles") }}<span class="ms b-flip">chevron_right</span></router-link>
       </header>
       <div class="b-blog">
         <router-link v-for="a in posts" :key="a.id" :to="postTo(a)" class="b-post">
@@ -205,6 +205,7 @@
 
 <script>
 import { currentCurrency } from "../region-switcher/region";
+import { t } from "../kalio/i18n/kalio-i18n";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import BestiCard from "./BestiCard.vue";
 import BestiRail from "./BestiRail.vue";
@@ -293,9 +294,9 @@ export default {
       return {
         cat,
         links,
-        eyebrow: isPower ? "Off-grid and on the road" : "Featured department",
-        title: isPower ? "Power that goes where you go" : `${cat.title || cat.name}, picked for you`,
-        cta: isPower ? "Shop portable power" : `Shop ${cat.title || cat.name}`,
+        eyebrow: isPower ? t("besti.home.banner.powerEyebrow", "Off-grid and on the road") : t("besti.home.banner.eyebrow", "Featured department"),
+        title: isPower ? t("besti.home.banner.powerTitle", "Power that goes where you go") : t("besti.home.banner.title", "{name}, picked for you", { name: cat.title || cat.name }),
+        cta: isPower ? t("besti.home.banner.powerCta", "Shop portable power") : t("besti.home.banner.cta", "Shop {name}", { name: cat.title || cat.name }),
       };
     },
     slides() {

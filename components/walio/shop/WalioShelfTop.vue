@@ -13,9 +13,9 @@
        crumbs, the title with the category's one-line description beside it
        (no product counts), and on a search its top match as a wide band. -->
   <div class="w-top b-top">
-    <nav aria-label="Breadcrumb" class="b-crumbs">
-      <router-link :to="{ path: '/' }">Home</router-link>
-      <span aria-hidden="true" class="ms">chevron_right</span>
+    <nav :aria-label="t('besti.ui.breadcrumb', 'Breadcrumb')" class="b-crumbs">
+      <router-link :to="{ path: '/' }">{{ t("besti.ui.home", "Home") }}</router-link>
+      <span aria-hidden="true" class="ms b-flip">chevron_right</span>
       <span aria-current="page">{{ crumb }}</span>
     </nav>
 
@@ -28,19 +28,19 @@
 
     <template v-if="mode !== 'aisle'">
       <div v-if="hits.length > 1" class="b-inaisles">
-        <span>In departments</span>
+        <span>{{ t("besti.ui.inDepartments", "In departments") }}</span>
         <router-link v-for="h in hits" :key="h.aisle.id" :to="h.to" class="b-chip">{{ h.aisle.title || h.aisle.name }}</router-link>
       </div>
       <router-link v-if="search && top" :to="productTo(top)" class="b-match">
         <span class="b-match__im"><img :src="image(top, false)" :srcset="srcset(top)" alt="" sizes="(max-width: 760px) 96px, 200px" @error="dropSrcset" /></span>
         <span class="b-match__tx">
-          <small>Top match</small>
+          <small>{{ t("besti.ui.topMatch", "Top match") }}</small>
           <b>{{ top.title }}</b>
           <span class="b-match__price">
             <u-price :amount="price(top).now" :currency="currency" />
-            <span v-if="price(top).was" class="b-save">Save <u-price :amount="price(top).was - price(top).now" :currency="currency" /></span>
+            <span v-if="price(top).was" class="b-save">{{ t("besti.ui.save", "Save") }} <u-price :amount="price(top).was - price(top).now" :currency="currency" /></span>
           </span>
-          <em>See the product<span class="ms">chevron_right</span></em>
+          <em>{{ t("besti.ui.seeTheProduct", "See the product") }}<span class="ms b-flip">chevron_right</span></em>
         </span>
       </router-link>
     </template>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { t } from "../../kalio/i18n/kalio-i18n";
 import { currentCurrency } from "../../region-switcher/region";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
 import BestiDealOfDay from "../../besti/BestiDealOfDay.vue";
@@ -97,15 +98,15 @@ export default {
       return mixByCategory(dealsOf(this.$shop, this.all).filter((p) => p.id !== this.dotd.id && p.category_id !== this.dotd.category_id), 3);
     },
     title() {
-      if (this.search) return `Results for “${this.search}”`;
-      if (this.deals) return "Today’s deals";
+      if (this.search) return t("besti.shop.resultsFor", "Results for “{query}”", { query: this.search });
+      if (this.deals) return t("besti.menu.todaysDeals", "Today’s deals");
       /* Besti: a brand's page (Shop by brand, Brands menu). */
       if (this.filter?.brands?.length === 1) return this.filter.brands[0];
-      return "All products";
+      return t("besti.menu.allProducts", "All products");
     },
     crumb() {
       if (this.mode === "aisle") return this.aisle ? this.aisle.title || this.aisle.name : this.categoryName;
-      return this.search ? "Search" : this.title;
+      return this.search ? t("besti.search", "Search") : this.title;
     },
     tint() {
       return tintFor(this.aisle) || "#e6f1fc";

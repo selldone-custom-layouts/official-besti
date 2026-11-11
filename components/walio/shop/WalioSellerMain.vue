@@ -9,9 +9,9 @@
   <div v-if="!$route.params.category_name" class="w-smain">
     <router-link v-if="on_sale" :to="dealsTo" class="w-sdeal">
       <span class="w-sdeal__tx">
-        <small>{{ name }}'s deals</small>
-        <b>{{ on_sale.toLocaleString() }} {{ on_sale === 1 ? "product" : "products" }}{{ best ? `, up to ${best}% off` : " on sale" }}</b>
-        <em>Shop {{ name }}'s deals<v-icon size="20">chevron_right</v-icon></em>
+        <small>{{ t("besti.seller.deals", "{name}’s deals", { name }) }}</small>
+        <b>{{ best ? t("besti.seller.onSaleUpTo", { one: "{n} product, up to {off}% off", other: "{n} products, up to {off}% off" }, { n: on_sale, off: best }) : t("besti.seller.onSale", { one: "{n} product on sale", other: "{n} products on sale" }, { n: on_sale }) }}</b>
+        <em>{{ t("besti.seller.shopDeals", "Shop {name}’s deals", { name }) }}<v-icon size="20">chevron_right</v-icon></em>
       </span>
       <span aria-hidden="true" class="w-sdeal__packs">
         <img v-for="p in deals.slice(0, 3)" :key="p.id" :src="full(p)" :srcset="srcset(p)" alt="" sizes="170px" @error="dropSrcset" />
@@ -23,12 +23,12 @@
       :dir="a.name"
       :limit="10"
       :more-to="{ ...aisleRoute(a), query: { vendor_id: vendorId } }"
-      :title="`${name}'s ${a.title || a.name}`"
+      :title="t('besti.seller.aisle', '{name}’s {aisle}', { name, aisle: a.title || a.name })"
       :vendor="vendorId"
       lazy
       sort="bestselling"
     />
-    <h2 class="w-sall">Everything from {{ name }}</h2>
+    <h2 class="w-sall">{{ t("besti.seller.everything", "Everything from {name}", { name }) }}</h2>
   </div>
 </template>
 

@@ -92,7 +92,7 @@
             :filters="filters_def"
             :model-value="t_filter"
             :sort="t_sort"
-            :sort-fallback="category_name ? 'Featured' : 'Best match'"
+            :sort-fallback="category_name ? t('besti.sort.featured', 'Featured') : t('besti.sort.bestMatch', 'Best match')"
             @update:model-value="setFilter"
             @update:sort="setSort"
           />
@@ -105,7 +105,7 @@
                 <button v-for="c in on_chips" :key="c.key" class="b-chip -on" type="button" @click="c.off()">
                   {{ c.label }}<v-icon size="16">close</v-icon>
                 </button>
-                <button v-if="on_chips.length > 1" class="b-link" type="button" @click="setFilter(null)">Clear all</button>
+                <button v-if="on_chips.length > 1" class="b-link" type="button" @click="setFilter(null)">{{ t("besti.ui.clearAll", "Clear all") }}</button>
               </div>
               <walio-filter-rail
                 v-if="vendor_id"
@@ -113,11 +113,10 @@
                 :model-value="t_filter"
                 :sort="t_sort"
                 compact
-                sort-fallback="Featured"
                 @update:model-value="setFilter"
                 @update:sort="setSort"
               />
-              <walio-sort-menu v-else :model-value="t_sort" :fallback="category_name ? 'Featured' : 'Best match'" @update:model-value="setSort" />
+              <walio-sort-menu v-else :model-value="t_sort" :fallback="category_name ? t('besti.sort.featured', 'Featured') : t('besti.sort.bestMatch', 'Best match')" @update:model-value="setSort" />
             </div>
             <s-products-listing
               ref="listing"
@@ -137,9 +136,9 @@
 
         <!-- ▆▆▆▆▆▆▆▆ Under the grid ▆▆▆▆▆▆▆▆ -->
         <template v-if="!vendor_id">
-          <besti-row v-if="catalogue && search_query" :limit="12" lazy sort="bestselling" title="Popular right now" />
+          <besti-row v-if="catalogue && search_query" :limit="12" lazy sort="bestselling" :title="t('besti.ui.popularRightNow', 'Popular right now')" />
           <section v-if="more_aisles.length" class="t-keep">
-            <h2 class="t-keep__h">Keep shopping</h2>
+            <h2 class="t-keep__h">{{ t("besti.ui.keepShopping", "Keep shopping") }}</h2>
             <div class="t-keep__list">
               <router-link v-for="a in more_aisles" :key="a.id" :to="aisleTo(a)">{{ a.title || a.name }}</router-link>
             </div>
@@ -154,6 +153,7 @@
 </template>
 
 <script lang="ts">
+import { t } from "../../components/kalio/i18n/kalio-i18n";
 import SProductsListing from "@selldone/components-vue/storefront/products/listing/SProductsListing.vue";
 import TemplateMixin from "@selldone/components-vue/mixin/template/TemplateMixin.ts";
 import BestiHome from "../../components/besti/BestiHome.vue";
@@ -254,8 +254,8 @@ export default {
       if (!f) return [];
       const out = [];
       const next = () => JSON.parse(JSON.stringify(f));
-      if (f.only_has_discount) out.push({ key: "sale", label: "On sale", off: () => this.setFilter({ ...next(), only_has_discount: false }) });
-      if (f.prices && Object.keys(f.prices).length) out.push({ key: "price", label: "Price", off: () => this.setFilter({ ...next(), prices: null }) });
+      if (f.only_has_discount) out.push({ key: "sale", label: t("besti.filter.onSale", "On sale"), off: () => this.setFilter({ ...next(), only_has_discount: false }) });
+      if (f.prices && Object.keys(f.prices).length) out.push({ key: "price", label: t("besti.filter.price", "Price"), off: () => this.setFilter({ ...next(), prices: null }) });
       for (const b of f.brands || []) out.push({ key: "b" + b, label: b, off: () => this.setFilter({ ...next(), brands: (f.brands || []).filter((x) => x !== b) }) });
       for (const [k, vals] of Object.entries(f.selected_spec || {}))
         for (const v of vals || [])

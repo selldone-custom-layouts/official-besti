@@ -1,3 +1,4 @@
+import { t } from "../../kalio/i18n/kalio-i18n";
 /* Walio — the filters of a listing, read from Selldone's own filter record.
 
    An aisle's record (`parent.filters`, or `shop.filters` on the whole
@@ -37,6 +38,23 @@ const VARIANT_LABEL: Record<string, string> = {
   styles: "Style",
   types: "Type",
 };
+/* The same, in the visitor's language (Besti 1.0.21). */
+function variantLabel(key: string): string {
+  switch (key) {
+    case "volumes":
+      return t("besti.dim.capacity", "Capacity");
+    case "weights":
+      return t("besti.dim.weight", "Weight");
+    case "packs":
+      return t("besti.dim.pack", "Pack");
+    case "colors":
+      return t("besti.dim.colour", "Colour");
+    case "styles":
+      return t("besti.dim.style", "Style");
+    default:
+      return t("besti.dim.type", "Type");
+  }
+}
 const RESERVED = ["prices", "brands", "ignore"];
 
 function list(value: any): string[] {
@@ -53,7 +71,7 @@ export function groupsOf(filters: any): WalioGroup[] {
   const out: WalioGroup[] = [];
   for (const key of Object.keys(VARIANT_LABEL)) {
     const values = list(filters[key]);
-    if (values.length) out.push({ kind: "variant", key, label: VARIANT_LABEL[key], values });
+    if (values.length) out.push({ kind: "variant", key, label: variantLabel(key), values });
   }
   for (const key of Object.keys(filters)) {
     if (RESERVED.includes(key) || VARIANT_LABEL[key]) continue;
@@ -61,7 +79,7 @@ export function groupsOf(filters: any): WalioGroup[] {
     if (values.length) out.push({ kind: "spec", key, label: key, values });
   }
   const brands = list(filters.brands);
-  if (brands.length) out.push({ kind: "brand", key: "brands", label: "Brand", values: brands });
+  if (brands.length) out.push({ kind: "brand", key: "brands", label: t("besti.filter.brand", "Brand"), values: brands });
   return out;
 }
 
@@ -125,14 +143,14 @@ export function valueLabel(value: string): string {
    sort by rating, so "Customer reviews" is not offered (it would not do
    what it says). */
 export const SORTS = [
-  { val: "bestselling", name: "Best sellers" },
-  { val: "newest", name: "Newest" },
-  { val: "cheapest", name: "Price: low to high" },
-  { val: "most_expensive", name: "Price: high to low" },
-  { val: "most_popular", name: "Most liked" },
-  { val: "most_visited", name: "Most viewed" },
+  { val: "bestselling", get name() { return t("besti.sort.bestselling", "Best sellers"); } },
+  { val: "newest", get name() { return t("besti.sort.newest", "Newest"); } },
+  { val: "cheapest", get name() { return t("besti.sort.cheapest", "Price: low to high"); } },
+  { val: "most_expensive", get name() { return t("besti.sort.expensive", "Price: high to low"); } },
+  { val: "most_popular", get name() { return t("besti.sort.popular", "Most liked"); } },
+  { val: "most_visited", get name() { return t("besti.sort.visited", "Most viewed"); } },
 ];
 
-export function sortName(val: string | null | undefined, fallback = "Featured"): string {
-  return SORTS.find((s) => s.val === val)?.name || fallback;
+export function sortName(val: string | null | undefined, fallback = ""): string {
+  return SORTS.find((s) => s.val === val)?.name || fallback || t("besti.sort.featured", "Featured");
 }

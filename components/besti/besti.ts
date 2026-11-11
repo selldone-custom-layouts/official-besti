@@ -1,4 +1,5 @@
 import { currentCurrency, formatMoney } from "../region-switcher/region";
+import { t } from "../kalio/i18n/kalio-i18n";
 /*
  * Besti — shared reads and helpers for the department-store pages.
  *
@@ -224,8 +225,8 @@ export function categoryLine(shop: any, list: any[], categoryId: number, currenc
   const ps = list.filter((p) => p.category_id === categoryId);
   if (!ps.length) return "";
   const best = Math.max(0, ...ps.map((p) => moneyOf(shop, p, null, currency).save));
-  if (best > 0) return `Up to ${money(Math.round(best))} off`;
-  return `From ${money(Math.min(...ps.map((p) => moneyOf(shop, p, null, currency).now)))}`;
+  if (best > 0) return t("besti.upToOff", "Up to {amount} off", { amount: money(Math.round(best)) });
+  return t("besti.from", "From {amount}", { amount: money(Math.min(...ps.map((p) => moneyOf(shop, p, null, currency).now))) });
 }
 
 /** Brands by how many products carry them. */
@@ -326,6 +327,54 @@ export function leadVariant(product: any): any | null {
   return v && v.id ? v : null;
 }
 
+/** "Choose colour", "Choose capacity"…: the card's button for a product
+    whose variants differ in one thing, in the visitor's language. */
+export function chooseLabel(dim: { key: string } | null): string {
+  switch (dim?.key) {
+    case "color":
+      return t("besti.choose.colour", "Choose colour");
+    case "volume":
+      return t("besti.choose.capacity", "Choose capacity");
+    case "weight":
+      return t("besti.choose.weight", "Choose weight");
+    case "pack":
+      return t("besti.choose.pack", "Choose pack");
+    case "type":
+      return t("besti.choose.type", "Choose type");
+    case "style":
+      return t("besti.choose.style", "Choose style");
+    default:
+      return t("besti.choose.options", "Choose options");
+  }
+}
+
+/** A colour's English name (the list below) in the visitor's language. */
+function colourWord(name: string): string {
+  switch (name) {
+    case "Black": return t("besti.colour.black", "Black");
+    case "White": return t("besti.colour.white", "White");
+    case "Gray": return t("besti.colour.gray", "Gray");
+    case "Silver": return t("besti.colour.silver", "Silver");
+    case "Red": return t("besti.colour.red", "Red");
+    case "Pink": return t("besti.colour.pink", "Pink");
+    case "Orange": return t("besti.colour.orange", "Orange");
+    case "Yellow": return t("besti.colour.yellow", "Yellow");
+    case "Green": return t("besti.colour.green", "Green");
+    case "Teal": return t("besti.colour.teal", "Teal");
+    case "Blue": return t("besti.colour.blue", "Blue");
+    case "Navy": return t("besti.colour.navy", "Navy");
+    case "Indigo": return t("besti.colour.indigo", "Indigo");
+    case "Purple": return t("besti.colour.purple", "Purple");
+    case "Brown": return t("besti.colour.brown", "Brown");
+    case "Gold": return t("besti.colour.gold", "Gold");
+    case "Beige": return t("besti.colour.beige", "Beige");
+    case "Sky blue": return t("besti.colour.skyBlue", "Sky blue");
+    case "Magenta": return t("besti.colour.magenta", "Magenta");
+    case "Cyan": return t("besti.colour.cyan", "Cyan");
+    default: return name;
+  }
+}
+
 /** A colour's name for people ("Indigo"), from the nearest of a short list. */
 const NAMES: [string, number, number, number][] = [
   ["Black", 0, 0, 0], ["White", 255, 255, 255], ["Gray", 128, 128, 128], ["Silver", 192, 192, 192],
@@ -347,7 +396,7 @@ export function colourName(color: string): string {
         const d = (n[1] - r) ** 2 + (n[2] - g) ** 2 + (n[3] - b) ** 2;
         if (d < dist) [best, dist] = [n, d];
       }
-      return best[0];
+      return colourWord(best[0]);
     })
     .filter(Boolean);
   return [...new Set(names)].join(" / ");
@@ -406,7 +455,7 @@ export function timeLeft(end: Date | null, now: number): TimeLeft | null {
   const h = String(Math.floor((left % 86400) / 3600)).padStart(2, "0");
   const m = String(Math.floor((left % 3600) / 60)).padStart(2, "0");
   const sec = String(left % 60).padStart(2, "0");
-  return { d, h, m, s: sec, text: `${d ? d + "d " : ""}${h}:${m}:${sec}` };
+  return { d, h, m, s: sec, text: (d ? t("besti.clock.days", "{n}d", { n: d }) + " " : "") + `${h}:${m}:${sec}` };
 }
 
 /** A brand's products: the catalogue with Selldone's own brand filter. */

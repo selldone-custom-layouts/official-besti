@@ -25,10 +25,10 @@
         <router-link v-if="moreTo" :to="moreTo" class="t-sec__more">
           {{ moreLabel }}<v-icon class="k-flip" size="20">chevron_right</v-icon>
         </router-link>
-        <button :disabled="at_start" aria-label="Scroll back" class="t-arrow -small" type="button" @click="scrollBy(-1)">
+        <button :disabled="at_start" :aria-label="t('besti.ui.scrollBack', 'Scroll back')" class="t-arrow -small" type="button" @click="scrollBy(-1)">
           <v-icon class="k-flip" size="20">chevron_left</v-icon>
         </button>
-        <button :disabled="at_end" aria-label="Scroll forward" class="t-arrow -small" type="button" @click="scrollBy(1)">
+        <button :disabled="at_end" :aria-label="t('besti.ui.scrollForward', 'Scroll forward')" class="t-arrow -small" type="button" @click="scrollBy(1)">
           <v-icon class="k-flip" size="20">chevron_right</v-icon>
         </button>
       </div>

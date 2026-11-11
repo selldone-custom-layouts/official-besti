@@ -14,19 +14,20 @@
 -->
 <template>
   <span v-if="left && mode === 'line'" :title="title" class="b-cd">
-    <span class="ms">schedule</span><span class="b-cd__w">Ends in </span><b>{{ left.text }}</b>
+    <span class="ms">schedule</span><span class="b-cd__w">{{ t("besti.ui.endsIn", "Ends in") }} </span><b>{{ left.text }}</b>
   </span>
-  <span v-else-if="left && mode === 'strip'" :title="title" class="b-strip__clock">Ends in <b>{{ left.text }}</b></span>
+  <span v-else-if="left && mode === 'strip'" :title="title" class="b-strip__clock">{{ t("besti.ui.endsIn", "Ends in") }} <b>{{ left.text }}</b></span>
   <div v-else-if="left && mode === 'blocks'" :title="title" class="b-cd-blocks">
-    <em>Ends in</em>
+    <em>{{ t("besti.ui.endsIn", "Ends in") }}</em>
     <div aria-live="off" class="b-count" :class="{ '-days': left.d > 0 }">
-      <span v-if="left.d"><b>{{ left.d }}</b>{{ left.d === 1 ? "day" : "days" }}</span><span><b>{{ left.h }}</b>hrs</span><span><b>{{ left.m }}</b>min</span><span><b>{{ left.s }}</b>sec</span>
+      <span v-if="left.d"><b>{{ left.d }}</b>{{ t("besti.clock.dayWord", { one: "day", other: "days" }, { n: left.d }) }}</span><span><b>{{ left.h }}</b>{{ t("besti.clock.hrs", "hrs") }}</span><span><b>{{ left.m }}</b>{{ t("besti.clock.min", "min") }}</span><span><b>{{ left.s }}</b>{{ t("besti.clock.sec", "sec") }}</span>
     </div>
   </div>
 </template>
 
 <script>
 import { startClock, tick, timeLeft } from "./besti";
+import { formatDate, t } from "../kalio/i18n/kalio-i18n";
 
 export default {
   name: "BestiDealClock",
@@ -40,7 +41,7 @@ export default {
       return timeLeft(this.end, tick.now);
     },
     title() {
-      return this.end ? `Deal ends ${this.end.toLocaleString()}` : null;
+      return this.end ? t("besti.clock.title", "Deal ends {when}", { when: formatDate(this.end, { dateStyle: "medium", timeStyle: "short" }) }) : null;
     },
   },
   mounted() {

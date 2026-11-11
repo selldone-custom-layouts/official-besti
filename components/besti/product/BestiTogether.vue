@@ -11,7 +11,7 @@
 -->
 <template>
   <section v-if="items.length > 1" id="b-together" aria-labelledby="b-together-h" class="b-sec b-together">
-    <header class="b-head"><h2 id="b-together-h">{{ curated ? "Frequently bought together" : "Goes well together" }}</h2></header>
+    <header class="b-head"><h2 id="b-together-h">{{ curated ? t("besti.together.title", "Frequently bought together") : t("besti.together.goesWell", "Goes well together") }}</h2></header>
     <div class="b-together__box">
       <div class="b-together__row">
         <template v-for="(it, i) in items" :key="it.p.id">
@@ -22,7 +22,7 @@
               <input v-model="it.on" type="checkbox" />
               <i aria-hidden="true"><span class="ms">check</span></i>
               <span>
-                <template v-if="!i"><b>This item:</b> </template>{{ it.p.title }}
+                <template v-if="!i"><b>{{ t("besti.ui.thisItem", "This item:") }}</b> </template>{{ it.p.title }}
               </span>
             </label>
             <b class="b-together__price"><u-price :amount="priceOf(it)" :currency="currency" /></b>
@@ -30,11 +30,11 @@
         </template>
       </div>
       <div class="b-together__sum">
-        <small>Total for {{ count === items.length ? (count === 3 ? "all three" : "both") : count === 1 ? "one item" : `${count} items` }}</small>
+        <small>{{ count === items.length && count === 3 ? t("besti.together.totalAllThree", "Total for all three") : count === items.length && count === 2 ? t("besti.together.totalBoth", "Total for both") : t("besti.together.totalFor", { one: "Total for one item", other: "Total for {n} items" }, { n: count }) }}</small>
         <u-price :amount="total" :currency="currency" class="b-together__total" />
         <button :disabled="!count || adding" class="b-btn" type="button" @click="addAll">
-          <template v-if="done"><span class="ms">check</span>Added to cart</template>
-          <template v-else><span class="ms">add_shopping_cart</span>Add {{ count === items.length && count > 1 ? `all ${count}` : count }} to cart</template>
+          <template v-if="done"><span class="ms">check</span>{{ t("besti.ui.addedToCart", "Added to cart") }}</template>
+          <template v-else><span class="ms">add_shopping_cart</span>{{ count === items.length && count > 1 ? t("besti.together.addAll", "Add all {n} to cart", { n: count }) : t("besti.together.add", { one: "Add {n} to cart", other: "Add {n} to cart" }, { n: count }) }}</template>
         </button>
       </div>
     </div>

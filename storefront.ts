@@ -37,6 +37,8 @@ import {createComponents} from "@selldone/components-vue/components";
 import "@fortawesome/fontawesome-free/css/all.css"; // Ensure your project is capable of handling css files
 import "@selldone/components-vue/style/fonts/material-design-fonts/material-design-icons.scss"; // Ensure your project is capable of handling css files
 import "@selldone/components-vue/style/fonts/lang/fa/lang-fa-iransans.css";
+import { EN as KALIO_EN, LOADERS as KALIO_LANGUAGES } from "./components/kalio/i18n";
+import { bootI18n, i18nGlobals } from "./components/kalio/i18n/kalio-i18n";
 import "./components/kalio/kalio-fonts"; // Kalio typefaces, loaded by the app so they reach production
 import { PageHyper } from "@selldone/page-builder/PageHyperService.ts";
 import {SetupPageBuilder} from "@selldone/page-builder/page-builder.ts";
@@ -44,8 +46,7 @@ import {SetupService} from "@selldone/core-js/server";
 import {Shop} from "@selldone/core-js/models";
 import { bootThemeSwitcher } from "./components/theme-switcher/theme-switcher"; // the shared theme switcher (Besti 1.0.11)
 import { BESTI_THEME } from "./components/besti/besti-theme";
-import { bootRegion, defineMessages } from "./components/region-switcher/region"; // the visitor's language and currency (Besti 1.0.19)
-import { BESTI_MESSAGES } from "./components/besti/i18n";
+import { bootRegion } from "./components/region-switcher/region"; // the visitor's language and currency (Besti 1.0.19)
 
 const vuetify = VuetifyInstance(i18n);
 // Vuetify's light error red reads 4.5:1 on white (its #ff5252 is 3.3:1); set
@@ -83,6 +84,7 @@ window.OverrideShopLanguagePacks = {};
 //█████████████████████████████████████████████████████████████
 // @ts-ignore
 const app = createApp(StorefrontApp);
+Object.assign(app.config.globalProperties, i18nGlobals); // t(), formatNumber(), formatDate() in every template
 
 const components = createComponents({});
 app.use(components);
@@ -95,9 +97,11 @@ app.use(components);
 StorefrontSDK.Setup(); // Set up the Shop SDK.
 
 // The visitor's language and currency (the header pill and the phone menu's
-// row; components/region-switcher, copied unchanged from new-shop-kits).
-defineMessages(BESTI_MESSAGES);
+// row; components/region-switcher, copied unchanged from new-shop-kits), then
+// the Layout's own words in the visitor's language (components/kalio/i18n;
+// sets <html lang dir>).
 bootRegion(store);
+bootI18n(KALIO_EN, KALIO_LANGUAGES);
 
 // ━━━ Community SDK (capi) ━━━
 CapiCommunity.Setup(); // Setup community.

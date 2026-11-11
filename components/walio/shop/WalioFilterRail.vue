@@ -19,14 +19,14 @@
        always shown), price with a slider and two short boxes, On sale only,
        brands, colours as swatches, the other variant values, then the
        category's own spec filters (the first open, the rest folded). -->
-  <aside v-if="!compact" aria-label="Filters" class="w-rail b-rail-f">
+  <aside v-if="!compact" :aria-label="t('besti.ui.filters', 'Filters')" class="w-rail b-rail-f">
     <header class="w-rail__hd">
-      <b>Filters</b>
-      <button v-if="on_count" class="w-rail__clear" type="button" @click="clearAll">Clear all</button>
+      <b>{{ t("besti.ui.filters", "Filters") }}</b>
+      <button v-if="on_count" class="w-rail__clear" type="button" @click="clearAll">{{ t("besti.ui.clearAll", "Clear all") }}</button>
     </header>
     <details v-if="cats.length" class="w-grp" open>
-      <summary>Department<v-icon size="22">expand_more</v-icon></summary>
-      <nav class="b-deps" aria-label="Departments">
+      <summary>{{ t("besti.ui.department", "Department") }}<v-icon size="22">expand_more</v-icon></summary>
+      <nav class="b-deps" :aria-label="t('besti.ui.departments', 'Departments')">
         <router-link
           v-for="c in shownCats"
           :key="c.id"
@@ -37,12 +37,12 @@
         >
         <button v-if="cats.length > 10" class="b-deps__more" type="button" @click="all_cats = !all_cats">
           <v-icon size="18">{{ all_cats ? "expand_less" : "expand_more" }}</v-icon
-          >{{ all_cats ? "Fewer departments" : `${cats.length - 10} more departments` }}
+          >{{ all_cats ? t("besti.filter.fewerDepartments", "Fewer departments") : t("besti.filter.moreDepartments", { one: "{n} more department", other: "{n} more departments" }, { n: cats.length - 10 }) }}
         </button>
       </nav>
     </details>
     <details v-if="has_price" class="w-grp" open>
-      <summary>Price<v-icon size="22">expand_more</v-icon></summary>
+      <summary>{{ t("besti.ui.price", "Price") }}<v-icon size="22">expand_more</v-icon></summary>
       <v-range-slider
         v-model="price_draft"
         :max="price_max"
@@ -56,15 +56,15 @@
         @end="applyPrice(price_draft)"
       ></v-range-slider>
       <div class="b-prange">
-        <label><span>{{ sign }}</span><input :value="Math.round(price_draft[0])" aria-label="Lowest price" inputmode="numeric" @change="typed(0, $event)" /></label>
-        <em>to</em>
-        <label><span>{{ sign }}</span><input :value="Math.round(price_draft[1])" aria-label="Highest price" inputmode="numeric" @change="typed(1, $event)" /></label>
+        <label><span>{{ sign }}</span><input :value="Math.round(price_draft[0])" :aria-label="t('besti.ui.lowestPrice', 'Lowest price')" inputmode="numeric" @change="typed(0, $event)" /></label>
+        <em>{{ t("besti.filter.to", "to") }}</em>
+        <label><span>{{ sign }}</span><input :value="Math.round(price_draft[1])" :aria-label="t('besti.ui.highestPrice', 'Highest price')" inputmode="numeric" @change="typed(1, $event)" /></label>
       </div>
     </details>
     <details v-if="!ignore.includes('discount')" class="w-grp" open>
-      <summary>Deals<v-icon size="22">expand_more</v-icon></summary>
+      <summary>{{ t("besti.ui.deals", "Deals") }}<v-icon size="22">expand_more</v-icon></summary>
       <label class="t-switch">
-        <span>On sale only</span>
+        <span>{{ t("besti.ui.onSaleOnly", "On sale only") }}</span>
         <input :checked="!!value.only_has_discount" type="checkbox" @change="toggleDeals" />
         <i></i>
       </label>
@@ -112,7 +112,7 @@
   <!-- The phone's bar (and the seller page's on every screen) -->
   <div :class="{ '-compact': compact }" class="w-split">
     <button type="button" @click="panel = true">
-      <v-icon size="20">tune</v-icon>Filters<b v-if="on_count" class="w-rail__n">{{ on_count }}</b>
+      <v-icon size="20">tune</v-icon>{{ t("besti.ui.filters", "Filters") }}<b v-if="on_count" class="w-rail__n">{{ on_count }}</b>
     </button>
     <v-menu location="bottom end" offset="6">
       <template v-slot:activator="{ props }">
@@ -138,22 +138,22 @@
       <div v-if="panel" aria-hidden="true" class="t-fscrim" @click="panel = false"></div>
     </transition>
     <transition name="t-up">
-      <div v-if="panel" aria-label="Filters" aria-modal="true" class="t-fpanel w-fpanel" role="dialog" @keydown.esc="panel = false">
+      <div v-if="panel" :aria-label="t('besti.ui.filters', 'Filters')" aria-modal="true" class="t-fpanel w-fpanel" role="dialog" @keydown.esc="panel = false">
         <div class="t-fpanel__in">
           <header class="t-fpanel__h">
-            Filters
-            <button aria-label="Close" class="t-fpanel__x" type="button" @click="panel = false"><v-icon size="24">close</v-icon></button>
+            {{ t("besti.ui.filters", "Filters") }}
+            <button :aria-label="t('besti.ui.close', 'Close')" class="t-fpanel__x" type="button" @click="panel = false"><v-icon size="24">close</v-icon></button>
           </header>
           <div class="t-fpanel__b">
             <section v-if="!ignore.includes('discount')" class="t-fgrp">
               <label class="t-switch">
-                <span>On sale only</span>
+                <span>{{ t("besti.ui.onSaleOnly", "On sale only") }}</span>
                 <input v-model="draft.only_has_discount" type="checkbox" />
                 <i></i>
               </label>
             </section>
             <section v-if="has_price" class="t-fgrp">
-              <h5>Price</h5>
+              <h5>{{ t("besti.ui.price", "Price") }}</h5>
               <v-range-slider v-model="draft_price" :max="price_max" :min="price_min" :step="price_step" color="primary" hide-details />
               <div class="w-rail__prices">
                 <span><u-price :amount="draft_price[0]" /></span>–<span><u-price :amount="draft_price[1]" /></span>
@@ -190,8 +190,8 @@
             </section>
           </div>
           <footer class="t-fpanel__f">
-            <button class="t-btn -line" type="button" @click="draftClear">Clear all</button>
-            <button class="t-btn -main" type="button" @click="draftApply">Show results</button>
+            <button class="t-btn -line" type="button" @click="draftClear">{{ t("besti.ui.clearAll", "Clear all") }}</button>
+            <button class="t-btn -main" type="button" @click="draftApply">{{ t("besti.ui.showResults", "Show results") }}</button>
           </footer>
         </div>
       </div>
@@ -200,6 +200,7 @@
 </template>
 
 <script>
+import { t } from "../../kalio/i18n/kalio-i18n";
 import { money as regionMoney, currentCurrency, formatMoney, signOf } from "../../region-switcher/region";
 import UPrice from "@selldone/components-vue/ui/price/UPrice.vue";
 import CurrencyMixin from "@selldone/components-vue/mixin/currency/CurrencyMixin.ts";
@@ -219,7 +220,7 @@ export default {
     filters: { type: Object, default: null },
     modelValue: { type: Object, default: null },
     sort: { type: String, default: null },
-    sortFallback: { type: String, default: "Featured" },
+    sortFallback: { type: String, default: "" },
     compact: Boolean,
     /** The departments, and the one open (Besti). */
     cats: { type: Array, default: () => [] },
@@ -298,9 +299,9 @@ export default {
       const b = Math.round(lo + ((hi - lo) * 2) / 3);
       const cur = (n) => formatMoney(n, this.currency, { short: true });
       return [
-        { label: `Under ${cur(a)}`, range: [lo, a] },
-        { label: `${cur(a)} – ${cur(b)}`, range: [a, b] },
-        { label: `${cur(b)} & up`, range: [b, hi] },
+        { label: t("besti.filter.under", "Under {amount}", { amount: cur(a) }), range: [lo, a] },
+        { label: t("besti.filter.between", "{from} – {to}", { from: cur(a), to: cur(b) }), range: [a, b] },
+        { label: t("besti.filter.andUp", "{amount} & up", { amount: cur(b) }), range: [b, hi] },
       ];
     },
   },

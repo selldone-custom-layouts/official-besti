@@ -16,16 +16,15 @@
     </span>
     <h1>{{ vendor ? vendor.name : "" }}</h1>
     <p>
-      An independent seller on {{ $shop.title }}<template v-if="sells_line">: {{ sells_line }}</template>, in the same cart as every
-      other seller.
+      {{ sells_line ? t("besti.seller.introSells", "An independent seller on {shop}: {sells}, in the same cart as every other seller.", { shop: $shop.title, sells: sells_line }) : t("besti.seller.intro", "An independent seller on {shop}, in the same cart as every other seller.", { shop: $shop.title }) }}
     </p>
     <div class="w-scard__facts">
-      <div><b>{{ total !== null ? total.toLocaleString() : "–" }}</b><span>products</span></div>
-      <div><b>{{ on_sale !== null ? on_sale.toLocaleString() : "–" }}</b><span>on sale</span></div>
-      <div><b>{{ tiles.length }}</b><span>aisles</span></div>
+      <div><b>{{ total !== null ? total.toLocaleString() : "–" }}</b><span>{{ t("besti.seller.products", "products") }}</span></div>
+      <div><b>{{ on_sale !== null ? on_sale.toLocaleString() : "–" }}</b><span>{{ t("besti.ui.onSale", "on sale") }}</span></div>
+      <div><b>{{ tiles.length }}</b><span>{{ t("besti.seller.aisles", "departments") }}</span></div>
     </div>
-    <nav aria-label="The seller's aisles" class="w-scard__nav">
-      <router-link :class="{ '-on': !$route.params.category_name }" :to="sellerTo">Everything <span>{{ total ?? "" }}</span></router-link>
+    <nav :aria-label="t('besti.ui.theSellerSAisles', 'The seller\'s aisles')" class="w-scard__nav">
+      <router-link :class="{ '-on': !$route.params.category_name }" :to="sellerTo">{{ t("besti.ui.everything", "Everything") }} <span>{{ total ?? "" }}</span></router-link>
       <router-link
         v-for="a in tiles"
         :key="a.aisle.id"

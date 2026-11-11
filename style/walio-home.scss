@@ -621,7 +621,7 @@ a:hover > .t-photo .t-photo__pack.-p1 {
 
   &__text {
     position: absolute;
-    left: 28px;
+    inset-inline-start: 28px;
     bottom: 28px;
     z-index: 1;
     display: grid;
@@ -785,8 +785,8 @@ a:hover > .t-photo .t-photo__pack.-p1 {
     }
 
     &__text {
-      left: 18px;
-      right: 18px;
+      inset-inline-start: 18px;
+      inset-inline-end: 18px;
       bottom: 18px;
 
       b {
@@ -829,7 +829,7 @@ a:hover > .t-photo .t-photo__pack.-p1 {
   img {
     position: absolute;
     top: 10px;
-    right: 10px;
+    inset-inline-end: 10px;
     width: 46%;
     height: 62%;
     object-fit: contain;

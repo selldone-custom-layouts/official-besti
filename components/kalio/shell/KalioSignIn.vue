@@ -29,14 +29,14 @@
       <!-- ▆▆▆▆▆▆▆▆ The shop ▆▆▆▆▆▆▆▆ -->
       <aside class="k-signin__brand">
         <p class="k-signin__mark"><besti-logo :to="null" light /></p>
-        <p class="k-signin__pitch">Your orders, saved items and addresses, in one place.</p>
+        <p class="k-signin__pitch">{{ t("besti.signin.pitch", "Your orders, saved items and addresses, in one place.") }}</p>
 
         <ul class="k-signin__perks">
-          <li><v-icon size="20">local_shipping</v-icon>Follow every order to your door</li>
-          <li><v-icon size="20">favorite_border</v-icon>Save products to compare and buy later</li>
-          <li><v-icon size="20">place</v-icon>Your addresses ready at checkout</li>
+          <li><v-icon size="20">local_shipping</v-icon>{{ t("signin.perks.orders", "Follow every order to your door") }}</li>
+          <li><v-icon size="20">favorite_border</v-icon>{{ t("besti.signin.perks.saved", "Save products to compare and buy later") }}</li>
+          <li><v-icon size="20">place</v-icon>{{ t("besti.signin.perks.addresses", "Your addresses ready at checkout") }}</li>
           <li v-if="sellerCount > 1">
-            <v-icon size="20">storefront</v-icon>One cart across {{ sellerCount }} independent sellers
+            <v-icon size="20">storefront</v-icon>{{ t("signin.perks.sellers", { one: "One cart across {n} independent seller", other: "One cart across {n} independent sellers" }, { n: sellerCount }) }}
           </li>
         </ul>
 
@@ -49,21 +49,21 @@
 
       <!-- ▆▆▆▆▆▆▆▆ The ways in ▆▆▆▆▆▆▆▆ -->
       <section class="k-signin__main">
-        <button aria-label="Close" class="k-signin__close" type="button" @click="show = false">
+        <button :aria-label="t('common.close', 'Close')" class="k-signin__close" type="button" @click="show = false">
           <v-icon>close</v-icon>
         </button>
 
-        <p class="k-eyebrow">Sign in or create an account</p>
-        <h2 id="k-signin-title" class="k-signin__title">Welcome to {{ shopTitle }}</h2>
-        <p class="k-signin__lede">New here? Your account is made as you sign in.</p>
+        <p class="k-eyebrow">{{ t("signin.eyebrow", "Sign in or create an account") }}</p>
+        <h2 id="k-signin-title" class="k-signin__title">{{ t("signin.title", "Welcome to {shop}", { shop: shopTitle }) }}</h2>
+        <p class="k-signin__lede">{{ t("signin.lede", "New here? Your account is made as you sign in.") }}</p>
 
         <s-shop-login v-model:show="show" class="k-signin__methods" />
 
         <p class="k-signin__legal">
-          By continuing you agree to {{ shopTitle }}’s
-          <router-link :to="{ name: window.$storefront.routes.SHOP_PROFILE_PAGE_TERMS }" @click="show = false">Terms</router-link>
-          and
-          <router-link :to="{ name: window.$storefront.routes.SHOP_PROFILE_PAGE_PRIVACY }" @click="show = false">Privacy policy</router-link>.
+          {{ t("signin.legal.lead", "By continuing you agree to {shop}’s", { shop: shopTitle }) }}
+          <router-link :to="{ name: window.$storefront.routes.SHOP_PROFILE_PAGE_TERMS }" @click="show = false">{{ t("signin.legal.terms", "Terms") }}</router-link>
+          {{ t("signin.legal.and", "and") }}
+          <router-link :to="{ name: window.$storefront.routes.SHOP_PROFILE_PAGE_PRIVACY }" @click="show = false">{{ t("signin.legal.privacy", "Privacy policy") }}</router-link>.
         </p>
       </section>
 

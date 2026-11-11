@@ -13,18 +13,18 @@
       <div class="b-404__in">
         <span aria-hidden="true" class="b-404__big">4<em>0</em>4</span>
         <div class="b-404__txt">
-          <h1>We can't find that page</h1>
-          <p>The link may be old, or the page has moved. Try a search or start from a department.</p>
+          <h1>{{ t("besti.404.title", "We can't find that page") }}</h1>
+          <p>{{ t("besti.404.lede", "The link may be old, or the page has moved. Try a search or start from a department.") }}</p>
           <form class="b-search -big" role="search" @submit.prevent="go">
-            <input v-model="q" aria-label="Search" enterkeyhint="search" placeholder="What can we help you find?" type="search" />
-            <button aria-label="Search" class="b-search__go" type="submit"><span class="ms">search</span></button>
+            <input v-model="q" :aria-label="t('besti.search', 'Search')" :placeholder="t('besti.search.placeholder', 'What can we help you find?')" enterkeyhint="search" type="search" />
+            <button :aria-label="t('besti.search', 'Search')" class="b-search__go" type="submit"><span class="ms">search</span></button>
           </form>
           <div class="b-404__links">
-            <span>Or go to</span>
-            <router-link :to="deals" class="b-chip">Today's deals</router-link>
-            <router-link :to="newest" class="b-chip">New arrivals</router-link>
-            <router-link :to="{ name: r.HISTORY_ORDERS_PHYSICAL }" class="b-chip">Track an order</router-link>
-            <router-link :to="{ name: r.SHOP_CONTACT_US }" class="b-chip">Help</router-link>
+            <span>{{ t("besti.404.orGoTo", "Or go to") }}</span>
+            <router-link :to="deals" class="b-chip">{{ t("besti.menu.todaysDeals", "Today’s deals") }}</router-link>
+            <router-link :to="newest" class="b-chip">{{ t("besti.header.new", "New arrivals") }}</router-link>
+            <router-link :to="{ name: r.HISTORY_ORDERS_PHYSICAL }" class="b-chip">{{ t("besti.menu.trackOrder", "Track an order") }}</router-link>
+            <router-link :to="{ name: r.SHOP_CONTACT_US }" class="b-chip">{{ t("besti.help", "Help") }}</router-link>
           </div>
         </div>
       </div>
@@ -32,8 +32,8 @@
 
     <section v-if="cats.length" class="b-sec b-wrap">
       <header class="b-head">
-        <h2>Popular departments</h2>
-        <router-link :to="catalogue" class="b-more">All departments<span class="ms">chevron_right</span></router-link>
+        <h2>{{ t("besti.404.popular", "Popular departments") }}</h2>
+        <router-link :to="catalogue" class="b-more">{{ t("besti.header.allDepartments", "All departments") }}<span class="ms b-flip">chevron_right</span></router-link>
       </header>
       <div :style="{ '--cols': Math.min(8, cats.length) }" class="b-depts -one">
         <router-link v-for="c in cats.slice(0, 8)" :key="c.id" :to="catTo(c)" class="b-dtile">
@@ -43,7 +43,7 @@
       </div>
     </section>
 
-    <besti-row :filter="{ only_has_discount: true }" :limit="12" :more-to="deals" class="b-wrap" more-label="See all deals" title="Today's deals" />
+    <besti-row :filter="{ only_has_discount: true }" :limit="12" :more-label="t('besti.deals.seeAll', 'See all deals')" :more-to="deals" :title="t('besti.menu.todaysDeals', 'Today’s deals')" class="b-wrap" />
   </div>
 </template>
 

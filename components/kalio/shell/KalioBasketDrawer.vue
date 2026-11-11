@@ -119,7 +119,7 @@ export default {
     /* An amount in the cart's own currency, shown in the visitor's: the
        server reprices the cart after a pick; this covers the moment before. */
     money(n, from) {
-      return regionMoney(n, from);
+      return "\u2066" + regionMoney(n, from) + "\u2069";
     },
     settling,
 

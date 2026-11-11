@@ -3265,3 +3265,9 @@ html[data-ts-mode="dark"] .v-avatar[style*="background-color: rgb(255, 255, 255)
 html[dir="rtl"] .b-flip {
   transform: scaleX(-1);
 }
+
+/* The wordmark keeps its letters left to right in Arabic too (Besti 1.0.25). */
+.b-logo {
+  direction: ltr;
+  unicode-bidi: isolate;
+}

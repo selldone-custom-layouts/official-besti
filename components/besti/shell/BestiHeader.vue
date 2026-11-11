@@ -240,7 +240,7 @@ import RegionSwitcherButton from "../../region-switcher/RegionSwitcherButton.vue
 import RegionSheet from "../../region-switcher/RegionSheet.vue";
 import { aisleRoute, aisles, catalogueRoute, dealsRoute } from "../../kalio/kalio-catalog";
 import { basketView } from "../../kalio/kalio-basket";
-import { brandRoute, brandsOf, catalogue, dealEnd, dealOfTheDay, leadVariant, moneyOf, moneyText, percentOff } from "../besti";
+import { brandRoute, brandsOf, catalogue, dealEnd, dealOfTheDay, leadVariant, ltr, moneyOf, moneyText, percentOff } from "../besti";
 
 export default {
   name: "BestiHeader",
@@ -306,7 +306,7 @@ export default {
       return Math.max(0, sum);
     },
     cartMoney() {
-      return formatMoney(this.cartTotal, this.currency);
+      return ltr(formatMoney(this.cartTotal, this.currency));
     },
     ordersTo() {
       return { name: window.$storefront.routes.HISTORY_ORDERS_PHYSICAL };

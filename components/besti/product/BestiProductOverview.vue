@@ -212,7 +212,7 @@ import { currentCurrency } from "../../region-switcher/region";
 import KalioProductOverview from "../../kalio/product/KalioProductOverview.vue";
 import UCountDown from "@selldone/components-vue/ui/count-down/UCountDown.vue";
 import { waysOf } from "../../walio/walio-home";
-import { brandRoute, colourName, dealEnd, moneyOf, moneyText, saved, swatchBg, toggleSaved, variantDimension } from "../besti";
+import { brandRoute, colourName, dealEnd, ltr, moneyOf, moneyText, saved, swatchBg, toggleSaved, variantDimension } from "../besti";
 import { specRows } from "./besti-spec";
 
 export default {
@@ -315,7 +315,7 @@ export default {
   methods: {
     /* An amount in its own currency, shown in the visitor's (region switcher). */
     rsMoney(n, from, short = "auto") {
-      return regionMoney(n, from, { short });
+      return ltr(regionMoney(n, from, { short }));
     },
     onResize() {
       this.compact = window.innerWidth < 900;

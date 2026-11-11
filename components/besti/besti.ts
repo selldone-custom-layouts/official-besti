@@ -407,7 +407,13 @@ export function colourName(color: string): string {
 /** An amount already in `currency` (the visitor's, from priceOf / moneyOf),
     formatted by the region switcher (Besti 1.0.19). */
 export function moneyText(amount: number, currency: string, whole = false): string {
-  return formatMoney(amount, currency || currentCurrency(), { short: whole });
+  return ltr(formatMoney(amount, currency || currentCurrency(), { short: whole }));
+}
+
+/** An amount keeps its left-to-right order inside a right-to-left sentence (Arabic):
+    wrapped in Unicode isolates, like Selldone's u-price (Besti 1.0.25). */
+export function ltr(text: string): string {
+  return "\u2066" + text + "\u2069";
 }
 
 /* ━━━━━━━━━━━━ Deal timers: the deal's own end ━━━━━━━━━━━━

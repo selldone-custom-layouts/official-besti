@@ -347,7 +347,7 @@ export default {
   methods: {
     /* An amount in its own currency, shown in the visitor's (region switcher). */
     rsMoney(n, from, short = "auto") {
-      return regionMoney(n, from, { short });
+      return "\u2066" + regionMoney(n, from, { short }) + "\u2069";
     },
     jump(id) {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -103,7 +103,7 @@
       <span v-else class="b-header__sp"></span>
 
       <nav :aria-label="t('besti.header.yourAccount', 'Your account')" class="b-acts">
-        <region-switcher-button v-if="!compact" button-class="b-region" />
+        <region-switcher-button v-if="!compact" :key="regionKey" button-class="b-region" />
         <router-link :to="ordersTo" class="b-act -track"><span class="ms">local_shipping</span><span class="b-act__t">{{ t("besti.header.track", "Track order") }}</span></router-link>
         <component :is="user ? 'router-link' : 'button'" :to="user ? savedTo : undefined" :type="user ? undefined : 'button'" class="b-act -saved" @click="!user && signIn()">
           <span class="ms">favorite</span><span class="b-act__t">{{ t("besti.header.saved", "Saved") }}</span>
@@ -196,7 +196,7 @@
             <router-link :to="allTo"><span class="ms">grid_view</span>{{ t("besti.menu.allProducts", "All products") }}</router-link>
             <router-link :to="ordersTo"><span class="ms">local_shipping</span>{{ t("besti.menu.trackOrder", "Track an order") }}</router-link>
             <!-- Phone and tablet: language and currency (the desktop has the header pill). -->
-            <region-sheet v-if="compact" keep-menu row-class="b-mega__region" />
+            <region-sheet v-if="compact" :key="regionKey" keep-menu row-class="b-mega__region" />
           </div>
         </div>
       </div>
@@ -270,6 +270,12 @@ export default {
   }),
 
   computed: {
+    /* The region package reads its words when it draws, and a language file
+       arrives a moment after the pick (one lazy chunk): the pill and the
+       menu's row are drawn again when it does (Besti 1.0.26, as Senso). */
+    regionKey() {
+      return t("region.title", "Language & currency");
+    },
     user() {
       return this.$store.getters.getUser;
     },

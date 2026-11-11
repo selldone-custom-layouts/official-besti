@@ -416,6 +416,13 @@ export function ltr(text: string): string {
   return "\u2066" + text + "\u2069";
 }
 
+/** A merchant's name inside Besti's own sentence ("\u0639\u0631\u0648\u0636 {name}") takes its direction from its own
+    first letter (a first-strong isolate, like <bdi>), so "TVs." keeps its full stop on the right side
+    in Arabic (Besti 1.0.26). */
+export function fsi(text: string): string {
+  return text ? "\u2068" + text + "\u2069" : "";
+}
+
 /* ━━━━━━━━━━━━ Deal timers: the deal's own end ━━━━━━━━━━━━
    Every clock counts to the discount's own end date by Selldone's rule
    (PriceHelper.HasDiscountCountDownMode / GetEndOfDiscountDate: the chosen

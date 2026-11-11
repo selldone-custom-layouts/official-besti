@@ -3271,3 +3271,135 @@ html[dir="rtl"] .b-flip {
   direction: ltr;
   unicode-bidi: isolate;
 }
+
+/* ━━━━━━━━━━━━ Merchant text keeps its own direction (Besti 1.0.26) ━━━━━━━━━━━━
+   On an Arabic page, English merchant data (category and product names,
+   descriptions, brands, banner lines, spec rows, cart lines) would take the
+   page's direction and show a full stop at the wrong end (".TVs"). Each such
+   element takes its direction from its own first strong letter (plaintext).
+   Start-aligned blocks stay aligned with the page (right in RTL), so only the
+   letters' order changes; Besti's own Arabic words are untouched. Names inside
+   Besti's own sentences ("عروض {name}") are wrapped in first-strong isolates. */
+html[dir="rtl"] {
+  :is(
+      .b-card__t,
+      .b-dotd__t,
+      .b-dotd__more b,
+      .b-hero__card p,
+      .b-hero__side b,
+      .b-mo b,
+      .b-wide__txt p,
+      .b-wide__links b,
+      .b-mini b,
+      .b-post h3,
+      .b-post p,
+      .b-pdp__title,
+      .b-pdp__specs dt,
+      .b-pdp__specs dd,
+      .b-spec caption,
+      .b-spec th,
+      .b-spec td,
+      .b-mega__item b,
+      .b-mega__item small,
+      .b-suggest__p span,
+      .b-top__title h1,
+      .b-top__title p,
+      .b-match__tx,
+      .b-together__pick > span,
+      .k-bdrawer__name span,
+      .k-lines__title,
+      .k-lines__name,
+      .k-mini__name,
+      .k-again__name,
+      .k-often__name,
+      .k-offer__name,
+      .k-ahome__name,
+      .w-scard h1,
+      .t-card__name
+    ) {
+    unicode-bidi: plaintext;
+    text-align: right;
+  }
+
+  /* Long merchant text (the product's article, a blog post): each paragraph
+     reads in its own direction and aligns to its own start. */
+  :is(.k-prose, .k-post) :is(p, li, h1, h2, h3, h4, td, th, blockquote) {
+    unicode-bidi: plaintext;
+    text-align: start;
+  }
+
+  :is(
+      .b-dept__a,
+      .b-menu a,
+      .b-footer nav a,
+      .b-crumbs a,
+      .b-crumbs > span:not(.ms),
+      .b-chip,
+      .b-deps a,
+      .t-keep__list a,
+      .w-scard__nav a,
+      .t-check__t,
+      .b-vtile__l,
+      .b-lbl b,
+      .b-brand,
+      .b-dtile b,
+      .b-tabs button,
+      .b-suggest__cat,
+      .b-strip__t
+    ) {
+    unicode-bidi: plaintext;
+  }
+}
+
+/* ━━━━━━━━━━━━ Right to left: the photo moves with the text (Besti 1.0.27) ━━━━━━━━━━━━
+   Above 900px the hero's card and the wide banner's words sit on the start
+   side of the photo (inset-inline-start), so in Arabic they are on the right:
+   the banner's dark scrim turns round with them, and both photos keep their
+   subject on the side away from the words. (On a phone the words sit under
+   the photo and there is no scrim.) */
+@media (min-width: 900px) {
+  html[dir="rtl"] {
+    .b-hero__photo .b-photo__img {
+      object-position: 25% 50%;
+    }
+
+    .b-wide__in {
+      > .b-photo .b-photo__img {
+        object-position: 30% 50%;
+      }
+
+      &::before {
+        background: linear-gradient(270deg, rgba(7, 22, 52, 0.88), rgba(7, 22, 52, 0.55) 34%, rgba(7, 22, 52, 0) 60%);
+      }
+    }
+  }
+}
+
+/* The deal strip's line takes the product name's own direction (1.0.26), so
+   its struck price gets its gap on both sides instead of the page's start. */
+html[dir="rtl"] .b-strip__t s {
+  margin-inline-start: 0;
+  margin: 0 4px;
+}
+
+/* A signed number keeps its sign before the digits in every language
+   ("+3" swatches, "-20%", "−US$ 5" on the receipt; Arabic showed "3+"). */
+:is(.b-swrow > em, .b-caps > em, .k-board__thumb.-more, .k-cmp__off, .t-card__tag, .k-cart__row > span + span, .w-rail__prices, .discount-percent) {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Joined scripts (Arabic, Devanagari) are never tracked: letter-spacing
+   pulls their letters apart. Every eyebrow, button, label, nav link and
+   heading drops its tracking in Arabic and Hindi (the :not(#…) pair only
+   lifts the rule above Besti's and Kalio's own !important tracking).
+   Selldone's "20 %" badge keeps its tightened space. Besti 1.0.27. */
+:is(:lang(ar), :lang(hi)):not(#b-joined):not(#b-joined),
+:is(:lang(ar), :lang(hi)):not(#b-joined):not(#b-joined)::before,
+:is(:lang(ar), :lang(hi)):not(#b-joined):not(#b-joined)::after {
+  letter-spacing: 0 !important;
+}
+
+:is(:lang(ar), :lang(hi)):not(.discount-percent):not(#b-joined):not(#b-joined) {
+  word-spacing: normal !important;
+}

@@ -34,7 +34,7 @@
             />
             <div class="b-hero__card">
               <small>{{ line(slide) }}</small>
-              <h1>{{ t("besti.home.hero.deals", "{name} deals", { name: slide.title || slide.name }) }}</h1>
+              <h1>{{ t("besti.home.hero.deals", "{name} deals", { name: fsi(slide.title || slide.name) }) }}</h1>
               <p v-if="slide.description">{{ slide.description }}</p>
               <div class="b-hero__row">
                 <router-link :to="catTo(slide)" class="b-btn">{{ t("besti.ui.shopNow", "Shop now") }}</router-link>
@@ -223,6 +223,7 @@ import {
   dealOfTheDay,
   dealsOf,
   forgetViewed,
+  fsi,
   isBestSellerTag,
   isNewTag,
   mixByCategory,
@@ -295,8 +296,8 @@ export default {
         cat,
         links,
         eyebrow: isPower ? t("besti.home.banner.powerEyebrow", "Off-grid and on the road") : t("besti.home.banner.eyebrow", "Featured department"),
-        title: isPower ? t("besti.home.banner.powerTitle", "Power that goes where you go") : t("besti.home.banner.title", "{name}, picked for you", { name: cat.title || cat.name }),
-        cta: isPower ? t("besti.home.banner.powerCta", "Shop portable power") : t("besti.home.banner.cta", "Shop {name}", { name: cat.title || cat.name }),
+        title: isPower ? t("besti.home.banner.powerTitle", "Power that goes where you go") : t("besti.home.banner.title", "{name}, picked for you", { name: fsi(cat.title || cat.name) }),
+        cta: isPower ? t("besti.home.banner.powerCta", "Shop portable power") : t("besti.home.banner.cta", "Shop {name}", { name: fsi(cat.title || cat.name) }),
       };
     },
     slides() {
@@ -451,6 +452,7 @@ export default {
   },
 
   methods: {
+    fsi,
     /* The hero turns every 7 seconds, not while the pointer is on it, nor
        while it is out of view; back in view, it waits a whole 7 seconds
        before it turns again (a slide never changes as you come back to it). */

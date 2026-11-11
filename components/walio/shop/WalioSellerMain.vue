@@ -9,9 +9,9 @@
   <div v-if="!$route.params.category_name" class="w-smain">
     <router-link v-if="on_sale" :to="dealsTo" class="w-sdeal">
       <span class="w-sdeal__tx">
-        <small>{{ t("besti.seller.deals", "{name}’s deals", { name }) }}</small>
+        <small>{{ t("besti.seller.deals", "{name}’s deals", { name: fsi(name) }) }}</small>
         <b>{{ best ? t("besti.seller.onSaleUpTo", { one: "{n} product, up to {off}% off", other: "{n} products, up to {off}% off" }, { n: on_sale, off: best }) : t("besti.seller.onSale", { one: "{n} product on sale", other: "{n} products on sale" }, { n: on_sale }) }}</b>
-        <em>{{ t("besti.seller.shopDeals", "Shop {name}’s deals", { name }) }}<v-icon size="20">chevron_right</v-icon></em>
+        <em>{{ t("besti.seller.shopDeals", "Shop {name}’s deals", { name: fsi(name) }) }}<v-icon size="20">chevron_right</v-icon></em>
       </span>
       <span aria-hidden="true" class="w-sdeal__packs">
         <img v-for="p in deals.slice(0, 3)" :key="p.id" :src="full(p)" :srcset="srcset(p)" alt="" sizes="170px" @error="dropSrcset" />
@@ -28,12 +28,13 @@
       lazy
       sort="bestselling"
     />
-    <h2 class="w-sall">{{ t("besti.seller.everything", "Everything from {name}", { name }) }}</h2>
+    <h2 class="w-sall">{{ t("besti.seller.everything", "Everything from {name}", { name: fsi(name) }) }}</h2>
   </div>
 </template>
 
 <script>
 import WalioRow from "../WalioRow.vue";
+import { fsi } from "../../besti/besti";
 import { DEALS_FILTER, listProducts } from "../walio-home";
 import { aisleRoute, aisles, countProducts, dropSrcset, featured, offers, percentOff, productImage, productSrcset } from "../../kalio/kalio-catalog";
 
@@ -78,6 +79,7 @@ export default {
   },
 
   methods: {
+    fsi,
     aisleRoute,
     dropSrcset,
     srcset(p) {

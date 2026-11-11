@@ -16,7 +16,7 @@
     </span>
     <h1>{{ vendor ? vendor.name : "" }}</h1>
     <p>
-      {{ sells_line ? t("besti.seller.introSells", "An independent seller on {shop}: {sells}, in the same cart as every other seller.", { shop: $shop.title, sells: sells_line }) : t("besti.seller.intro", "An independent seller on {shop}, in the same cart as every other seller.", { shop: $shop.title }) }}
+      {{ sells_line ? t("besti.seller.introSells", "An independent seller on {shop}: {sells}, in the same cart as every other seller.", { shop: fsi($shop.title), sells: fsi(sells_line) }) : t("besti.seller.intro", "An independent seller on {shop}, in the same cart as every other seller.", { shop: fsi($shop.title) }) }}
     </p>
     <div class="w-scard__facts">
       <div><b>{{ total !== null ? total.toLocaleString() : "–" }}</b><span>{{ t("besti.seller.products", "products") }}</span></div>
@@ -39,6 +39,7 @@
 
 <script>
 import { aisleRoute, aisles, countProducts, featured, offers, sellerRoute, vendorImage } from "../../kalio/kalio-catalog";
+import { fsi } from "../../besti/besti";
 
 export default {
   name: "WalioSellerSide",
@@ -73,6 +74,7 @@ export default {
   },
 
   methods: {
+    fsi,
     aisleRoute,
     fetch() {
       const id = this.vendorId;

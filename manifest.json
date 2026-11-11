@@ -3,7 +3,7 @@
   "deploy_path": "",
   "package": "besti-electronics",
   "name": "Besti Electronics",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "storefront": true,
   "backoffice": false,
   "description": "A white electronics department store: a deal-of-the-day strip, a photo hero, departments in two even rows, top deals by category, best sellers, brands and guides; bordered product tiles with colour swatches; filters built from the products' own specs; a three-column product page with a sticky buy box; a side-by-side compare page; a receipt-first cart."
